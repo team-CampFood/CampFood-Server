@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
     private final StoreService storeService;
     @ApiOperation(value = "예시1")
-    @PostMapping()
+    @GetMapping("/example1")
     public ResponseEntity<ResultResponse> example1(){
         storeService.example1();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.Example));
     }
 
     @ApiOperation(value = "예시2")
-    @PostMapping()
+    @PostMapping("/example2")
     public ResponseEntity<StoreInfoResponse> example2(){
         StoreInfoDTO storeInfoDTO = storeService.example2();
         return ResponseEntity.ok(StoreInfoResponse.of(ResultCode.Example, storeInfoDTO));
