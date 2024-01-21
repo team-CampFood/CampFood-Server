@@ -3,7 +3,7 @@ package com.campfood.src.review.entity;
 import com.campfood.common.entity.BaseEntity;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.entity.Store;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

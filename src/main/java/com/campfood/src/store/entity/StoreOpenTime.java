@@ -1,7 +1,7 @@
 package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
