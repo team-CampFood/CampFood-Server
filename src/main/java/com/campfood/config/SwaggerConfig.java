@@ -73,57 +73,5 @@ public class SwaggerConfig implements WebMvcConfigurer {
         authorizationScopes[0] = authorizationScope;
         return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
     }
-/*
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
 
-    @Bean
-    public Docket productApi() {
-        return getDocket("유저", Predicates.or(
-                PathSelectors.regex("/user.*")));
-    }
-
-
-    @Bean
-    public Docket searchApi() {
-        return getDocket("예약", Predicates.or(
-                PathSelectors.regex("/reservation.*")));
-    }
-
-
-    @Bean
-    public Docket commonApi() {
-        return getDocket("공통", Predicates.or(
-                PathSelectors.regex("/test.*")));
-
-    }
-
-    @Bean
-    public Docket allApi() {
-        return getDocket("전체", Predicates.or(
-                PathSelectors.regex("/*.*")));
-    }
-
-    public Docket getDocket(String groupName, Predicate<String> predicate) {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName(groupName)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cc.kr"))
-                .paths(predicate)
-                .apis(RequestHandlerSelectors.any())
-                .build();
-    }
-
-    @Bean
-    public UiConfiguration uiConfig() {
-        return UiConfigurationBuilder.builder()
-                .displayRequestDuration(true)
-                .validatorUrl("")
-                .build();
-    }
-*/
 }
