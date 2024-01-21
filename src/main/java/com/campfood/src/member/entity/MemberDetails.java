@@ -19,16 +19,12 @@ public class MemberDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-/*
-    @Override
-    public String getPassword() {
-        return member.getPassword();
-    }
-*/
+
     @Override
     public String getUsername() {
         return member.getLoginId();
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

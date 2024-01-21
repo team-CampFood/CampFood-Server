@@ -36,9 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = req.getHeader(AuthConstants.AUTH_HEADER_ACCESS);
             if (token != null) {
-                String userNickname = TokenProvider.getMemberNicknameFromToken(token);
+                String memberEmail = TokenProvider.getMemberEmailFromToken(token);
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userNickname,
+                        memberEmail,
                         null,
                         AuthorityUtils.NO_AUTHORITIES
                 );
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 res.setCharacterEncoding("utf-8");
                 map.put("status", "401");
                 map.put("message", "ACCESS TOKEN EXPIRED");
-                map.put("code", "A004");
+                map.put("code", "A000");
                 res.getWriter().write(objectMapper.writeValueAsString(map));
                 res.setStatus(401);
                 return;
@@ -64,8 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             res.setContentType("application/json");
             res.setCharacterEncoding("utf-8");
             map.put("status", "401");
-            map.put("message", "ACCESS TOKEN NOT SAME");
-            map.put("code", "A005");
+            map.put("message", "ACCESS TOKEN MISMATCH");
+            map.put("code", "A000");
             res.getWriter().write(objectMapper.writeValueAsString(map));
             res.setStatus(401);
             return;

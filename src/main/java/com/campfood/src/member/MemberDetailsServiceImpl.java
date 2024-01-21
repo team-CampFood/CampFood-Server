@@ -20,6 +20,6 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     public MemberDetails loadUserByUsername(String loginId) {
         return memberRepository.findByLoginId(loginId)
                 .map(m -> new MemberDetails(m, Collections.singleton(new SimpleGrantedAuthority(m.getRole().getValue()))))
-                .orElseThrow(() -> new ExampleException("user not exist", ErrorCode.USER_NOT_EXIST));
+                .orElseThrow(() -> new ExampleException("member not exist", ErrorCode.MEMBER_NOT_EXIST));
     }
 }

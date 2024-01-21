@@ -24,7 +24,7 @@ public class TokenProvider {
                 .setSubject(member.getNickname())
                 .setHeader(createHeader())
                 .setClaims(createClaims(member))
-                .setExpiration(createExpireHourForOneYear())
+                .setExpiration(setExpireTime())
                 .signWith(SignatureAlgorithm.HS256, createSigningKey());
         return builder.compact();
     }
@@ -64,7 +64,7 @@ public class TokenProvider {
         return header;
     }
 
-    private static Date createExpireHourForOneYear() {
+    private static Date setExpireTime() {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.HOUR, 2);
         return c.getTime();
@@ -72,7 +72,7 @@ public class TokenProvider {
 
     private static Map<String, Object> createClaims(Member member) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userNickname", member.getNickname());
+        claims.put("memberNickname", member.getNickname());
 //        claims.put("role", member.getRole());
         return claims;
     }
@@ -87,9 +87,9 @@ public class TokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
-    public static String getMemberNicknameFromToken(String token) {
+    public static String getMemberEmailFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
-        return (String) claims.get("memberNickname");
+        return (String) claims.get("memberEmail");
     }
 
 }
