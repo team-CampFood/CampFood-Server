@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 res.setCharacterEncoding("utf-8");
                 map.put("status", "401");
                 map.put("message", "ACCESS TOKEN EXPIRED");
-                map.put("code", "A000");
+                map.put("code", "A005");
                 res.getWriter().write(objectMapper.writeValueAsString(map));
                 res.setStatus(401);
                 return;
@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             res.setCharacterEncoding("utf-8");
             map.put("status", "401");
             map.put("message", "ACCESS TOKEN MISMATCH");
-            map.put("code", "A000");
+            map.put("code", "A006");
             res.getWriter().write(objectMapper.writeValueAsString(map));
             res.setStatus(401);
             return;
