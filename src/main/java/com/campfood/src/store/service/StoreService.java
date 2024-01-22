@@ -4,7 +4,7 @@ import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.StoreInfoDTO;
-import com.campfood.src.store.dto.StoreInquiryByTagDTO;
+import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
 import com.campfood.src.store.entity.Tag;
@@ -12,6 +12,8 @@ import com.campfood.src.store.mapper.StoreMapper;
 import com.campfood.src.store.repository.StoreHeartRepository;
 import com.campfood.src.store.repository.StoreRepository;
 import com.campfood.src.store.repository.StoreTagRepository;
+import com.campfood.src.university.entity.University;
+import com.campfood.src.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreHeartRepository storeHeartRepository;
     private final StoreTagRepository storeTagRepository;
+
+    private final UniversityService universityService;
 
     private final StoreMapper storeMapper;
 
@@ -49,9 +53,17 @@ public class StoreService {
         return storeHeart.isChecked();
     }
 
-    public List<StoreInquiryByTagDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
+    public List<StoreInquiryAllDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
 
         Page<Store> savedStores = storeTagRepository.findAllByTag(tag, pageable);
+
+        return savedStores.map(storeMapper::toInquiryByTagDTO).stream().toList();
+    }
+
+    public List<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
+        University university = universityService.findUniversityByName(name);
+
+        Page<Store> savedStores = storeRepository.findAllByUniversity(university, pageable);
 
         return savedStores.map(storeMapper::toInquiryByTagDTO).stream().toList();
     }

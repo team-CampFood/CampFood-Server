@@ -1,7 +1,7 @@
 package com.campfood.src.store.mapper;
 
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.store.dto.StoreInquiryByTagDTO;
+import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
 import com.campfood.src.store.entity.StoreTag;
@@ -25,13 +25,13 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreInquiryByTagDTO toInquiryByTagDTO(Store store) {
+    public StoreInquiryAllDTO toInquiryByTagDTO(Store store) {
         
         List<Tag> tags = store.getStoreTags().stream()
                 .map(StoreTag::getTag)
                 .collect(Collectors.toList());
 
-        return StoreInquiryByTagDTO.builder()
+        return StoreInquiryAllDTO.builder()
                 .storeName(store.getName())
                 .storeTags(tags)
                 .storeImage(store.getImage())

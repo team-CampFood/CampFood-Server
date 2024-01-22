@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreInquiryByTagDTO {
+public class StoreInquiryAllDTO {
     private String storeName;
     private List<Tag> storeTags;
     private String storeImage;
