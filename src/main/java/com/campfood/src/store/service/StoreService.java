@@ -3,7 +3,7 @@ package com.campfood.src.store.service;
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.store.dto.StoreInfoDTO;
+import com.campfood.src.store.dto.StoreInquiryDetailDTO;
 import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
@@ -55,23 +55,23 @@ public class StoreService {
 
     public List<StoreInquiryAllDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
 
-        Page<Store> savedStores = storeTagRepository.findAllByTag(tag, pageable);
+        Page<Store> stores = storeTagRepository.findAllByTag(tag, pageable);
 
-        return savedStores.map(storeMapper::toInquiryByTagDTO).stream().toList();
+        return stores.map(storeMapper::toInquiryByTagDTO).stream().toList();
     }
 
     public List<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
         University university = universityService.findUniversityByName(name);
 
-        Page<Store> savedStores = storeRepository.findAllByUniversity(university, pageable);
+        Page<Store> stores = storeRepository.findAllByUniversity(university, pageable);
 
-        return savedStores.map(storeMapper::toInquiryByTagDTO).stream().toList();
+        return stores.map(storeMapper::toInquiryByTagDTO).stream().toList();
     }
 
-    public void example1() {
-    }
+    public StoreInquiryDetailDTO inquiryStoreDetail(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
 
-    public StoreInfoDTO example2() {
-        return new StoreInfoDTO();
+        return storeMapper.toInquiryDetailDTO(store);
     }
 }

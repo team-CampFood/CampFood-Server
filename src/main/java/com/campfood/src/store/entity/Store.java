@@ -63,5 +63,8 @@ public class Store extends BaseEntity {
     private List<StoreTag> storeTags;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<StoreOpenTime> storeOpenTimes;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<StoreUniversity> universities;
 }

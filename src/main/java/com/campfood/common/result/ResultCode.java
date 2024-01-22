@@ -19,6 +19,7 @@ public enum     ResultCode {
     INACTIVE_STORE_HEART_SUCCESS(200, "S002", "좋아요를 비활성화에 성공하였습니다."),
     INQUIRY_STORES_BY_TAG_SUCCESS(200, "S003", "특정 태그 가게 목록 조회에 성공하였습니다."),
     INQUIRY_STORES_BY_UNIVERSITY_SUCCESS(200, "S004", "특정 학교 가게 목록 조회에 성공하였습니다."),
+    INQUIRY_STORE_DETAIL_SUCCESS(200, "S005", "특정 가게 상세 조회에 성공하였습니다."),
     ;
 
     private final int status;

@@ -5,7 +5,7 @@ import com.campfood.common.result.ResultResponse;
 import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.entity.Tag;
 import com.campfood.src.store.service.StoreService;
-import com.campfood.src.store.dto.StoreInfoDTO;
+import com.campfood.src.store.dto.StoreInquiryDetailDTO;
 import com.campfood.src.store.response.StoreResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,18 +60,10 @@ public class StoreController {
         return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_UNIVERSITY_SUCCESS, responseDTO));
     }
 
-    @ApiOperation(value = "예시1")
-    @GetMapping("/example1")
-    public ResponseEntity<ResultResponse> example1(){
-        storeService.example1();
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.Example));
+    @ApiOperation(value = "특정 가게 상세 조회")
+    @GetMapping("/{storeId}")
+    public ResponseEntity<StoreResponse<StoreInquiryDetailDTO>> inquiryStoreDetail(@PathVariable Long storeId) {
+        StoreInquiryDetailDTO responseDTO = storeService.inquiryStoreDetail(storeId);
+        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORE_DETAIL_SUCCESS, responseDTO));
     }
-
-    @ApiOperation(value = "예시2")
-    @PostMapping("/example2")
-    public ResponseEntity<StoreResponse> example2(){
-        StoreInfoDTO storeInfoDTO = storeService.example2();
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.Example, storeInfoDTO));
-    }
-
 }
