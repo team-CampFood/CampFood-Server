@@ -1,35 +1,29 @@
 package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
-import javax.persistence.*;
+import com.campfood.src.university.entity.University;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
+import javax.persistence.*;
 
 @Entity
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreOpenTime extends BaseEntity {
+public class StoreUniversity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn()
     private Store store;
 
-    @Column(nullable = false)
-    private DayOfWeek dayOfWeek;
-
-    private String openTime;
-
-    private String breakTime;
-
-    private String lastOrder;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn()
+    private University university;
 }
