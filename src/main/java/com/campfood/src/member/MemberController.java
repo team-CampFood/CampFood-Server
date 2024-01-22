@@ -4,17 +4,18 @@ import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.member.dto.LoginDto;
 import com.campfood.src.member.dto.SignUpDto;
-import com.campfood.src.store.dto.StoreInfoDTO;
-import com.campfood.src.store.response.StoreInfoResponse;
+import com.campfood.src.member.response.LoginIdCheckResponse;
+import com.campfood.src.member.response.NicknameCheckResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.campfood.common.result.ResultCode.*;
 
 @Api(tags="User")
 @RequiredArgsConstructor
@@ -45,5 +46,22 @@ public class MemberController {
         HttpHeaders headers = memberService.generateNewAccessToken(refreshToken);
         return ResponseEntity.ok().headers(headers).body(ResultResponse.of(ResultCode.NEW_ACCESS_TOKEN_SUCCESS));
     }
+
+    @ApiOperation(value = "닉네임 중복 확인")
+    @PostMapping("/nicknameCheck/{nickname}")
+    public ResponseEntity<NicknameCheckResponse> nicknameDuplicationCheck(@PathVariable(value = "nickname") String nickname){
+        boolean isDuplicated = memberService.nicknameDuplicationCheck(nickname);
+        ResultCode result = (isDuplicated ? INVALID_NICKNAME : VALID_NICKNAME);
+        return ResponseEntity.ok(NicknameCheckResponse.of(result, isDuplicated));
+    }
+
+    @ApiOperation(value = "로그인id 중복 확인")
+    @PostMapping("/loginIdCheck/{loginId}")
+    public ResponseEntity<LoginIdCheckResponse> loginIdDuplicationCheck(@PathVariable(value = "loginId") String loginId){
+        boolean isDuplicated = memberService.loginIdDuplicationCheck(loginId);
+        ResultCode result = (isDuplicated ? INVALID_LOGIN_ID : VALID_LOGIN_ID);
+        return ResponseEntity.ok(LoginIdCheckResponse.of(result, isDuplicated));
+    }
+
 
 }

@@ -53,4 +53,12 @@ public class MemberService {
         }
 
     }
+
+    public boolean nicknameDuplicationCheck(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    public boolean loginIdDuplicationCheck(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
+    }
 }
