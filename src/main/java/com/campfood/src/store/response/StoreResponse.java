@@ -1,30 +1,31 @@
 package com.campfood.src.store.response;
 
 import com.campfood.common.result.ResultCode;
-import com.campfood.src.store.dto.StoreInfoDTO;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 @ApiModel(description = "가게 상세정보 응답 모델")
-public class StoreInfoResponse {
+public class StoreResponse<T> {
 
     @ApiModelProperty(value = "Business 상태 코드")
     private final String code;
     @ApiModelProperty(value = "응답 메세지")
     private final String message;
     @ApiModelProperty(value = "응답 데이터")
-    private final StoreInfoDTO data;
+    private final T data;
 
 
-    public StoreInfoResponse(ResultCode resultCode, StoreInfoDTO data) {
+    public StoreResponse(ResultCode resultCode, T data) {
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
         this.data = data;
     }
 
-    public static StoreInfoResponse of(ResultCode resultCode, StoreInfoDTO data) {
-        return new StoreInfoResponse(resultCode, data);
+    public static <T> StoreResponse<T> of(ResultCode resultCode, T data) {
+        return new StoreResponse<>(resultCode, data);
     }
 }

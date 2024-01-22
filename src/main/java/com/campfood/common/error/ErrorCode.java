@@ -10,7 +10,11 @@ public enum ErrorCode {
     Example(000,"example","example"),
     INPUT_NOT_FOUND(400,"A001", "존재하지 않는 입력입니다."),
     MEMBER_NOT_EXIST(500,"A002","유저가 존재하지 않습니다."),
-    REFRESH_TOKEN_EXPIRED(401,"AOO3", "리프래시토큰이 만료되었습니다.");
+    REFRESH_TOKEN_EXPIRED(401,"AOO3", "리프래시토큰이 만료되었습니다."),
+
+    // Store
+    STORE_NOT_EXIST(500, "S001", "존재하지 않는 가게입니다."),
+    ;
 
     final private int status;
     final private String errorCode;
