@@ -4,14 +4,21 @@ import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.StoreInfoDTO;
+import com.campfood.src.store.dto.StoreInquiryByTagDTO;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
+import com.campfood.src.store.entity.Tag;
 import com.campfood.src.store.mapper.StoreMapper;
 import com.campfood.src.store.repository.StoreHeartRepository;
 import com.campfood.src.store.repository.StoreRepository;
+import com.campfood.src.store.repository.StoreTagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +26,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final StoreHeartRepository storeHeartRepository;
+    private final StoreTagRepository storeTagRepository;
 
     private final StoreMapper storeMapper;
 
@@ -39,6 +47,13 @@ public class StoreService {
         storeHeart.toggleStoreHeart();
 
         return storeHeart.isChecked();
+    }
+
+    public List<StoreInquiryByTagDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
+
+        Page<Store> savedStores = storeTagRepository.findAllByTag(tag, pageable);
+
+        return savedStores.map(storeMapper::toInquiryByTagDTO).stream().toList();
     }
 
     public void example1() {

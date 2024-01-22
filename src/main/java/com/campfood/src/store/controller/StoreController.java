@@ -2,14 +2,23 @@ package com.campfood.src.store.controller;
 
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
+import com.campfood.src.store.dto.StoreInquiryByTagDTO;
+import com.campfood.src.store.entity.Tag;
 import com.campfood.src.store.service.StoreService;
 import com.campfood.src.store.dto.StoreInfoDTO;
 import com.campfood.src.store.response.StoreResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.transform.Result;
+import java.util.List;
 
 @Api(tags = "Store")
 @RestController
@@ -24,6 +33,19 @@ public class StoreController {
         if (storeService.toggleStoreHeart(storeId))
             return ResponseEntity.ok(ResultResponse.of(ResultCode.ACTIVE_STORE_HAERT_SUCCESS));
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INACTIVE_STORE_HEART_SUCCESS));
+    }
+
+    @ApiOperation(value = "특정 태그 가게 조회")
+    @GetMapping
+    public ResponseEntity<StoreResponse<List<StoreInquiryByTagDTO>>> inquiryStoresByTag(@RequestParam Tag tag,
+                                                                                        @RequestParam String sort,
+                                                                                        @RequestParam Sort.Direction direction,
+                                                                                        @PageableDefault(page = 1) Pageable pageable) {
+        Sort sorting = Sort.by(direction, sort);
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
+
+        List<StoreInquiryByTagDTO> responseDTO = storeService.inquiryStoresByTag(tag, pageable);
+        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
     }
 
     @ApiOperation(value = "예시1")

@@ -35,16 +35,24 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    private String image;
+
     private String description;
 
-    @ColumnDefault("0")
+    @ColumnDefault("0.0")
     private Double naverRate;
 
     @ColumnDefault("0")
-    private int visitedReviewCnt;
+    private int naverVisitedReviewCnt;
 
     @ColumnDefault("0")
-    private int blogReviewCnt;
+    private int naverBlogReviewCnt;
+
+    @ColumnDefault("0.0")
+    private Double campFoodRate;
+
+    @ColumnDefault("0")
+    private int campFoodReviewCnt;
 
     @Column(nullable = false)
     private String address;
