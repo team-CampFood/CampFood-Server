@@ -29,7 +29,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             final Member member = new ObjectMapper().readValue(request.getInputStream(), Member.class);
             authRequest = new UsernamePasswordAuthenticationToken(member.getLoginId(), member.getPassword());
         } catch (IOException exception){
-            throw new InputNotFoundException("input not found error", ErrorCode.Example);
+            throw new InputNotFoundException("input not found error", ErrorCode.INPUT_NOT_FOUND);
         }
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);
