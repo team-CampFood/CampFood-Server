@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class StoreInquiryDetailDTO {
+    private Long storeId;
     private String storeName;
     private List<Tag> storeTags;
     private String storeImage;

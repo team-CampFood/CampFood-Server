@@ -3,8 +3,10 @@ package com.campfood.src.store.service;
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.src.member.entity.Member;
+import com.campfood.src.store.dto.PageResponse;
 import com.campfood.src.store.dto.StoreInquiryDetailDTO;
 import com.campfood.src.store.dto.StoreInquiryAllDTO;
+import com.campfood.src.store.dto.StoreSearchByKeywordDTO;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
 import com.campfood.src.store.entity.Tag;
@@ -53,19 +55,25 @@ public class StoreService {
         return storeHeart.isChecked();
     }
 
-    public List<StoreInquiryAllDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
+    public PageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
 
         Page<Store> stores = storeTagRepository.findAllByTag(tag, pageable);
 
-        return stores.map(storeMapper::toInquiryByTagDTO).stream().toList();
+        return new PageResponse<>(
+                stores.map(storeMapper::toInquiryByTagDTO).stream().toList(),
+                stores.hasNext()
+        );
     }
 
-    public List<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
+    public PageResponse<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
         University university = universityService.findUniversityByName(name);
 
         Page<Store> stores = storeRepository.findAllByUniversity(university, pageable);
 
-        return stores.map(storeMapper::toInquiryByTagDTO).stream().toList();
+        return new PageResponse<>(
+                stores.map(storeMapper::toInquiryByTagDTO).stream().toList(),
+                stores.hasNext()
+        );
     }
 
     public StoreInquiryDetailDTO inquiryStoreDetail(Long storeId) {
@@ -73,5 +81,14 @@ public class StoreService {
                 .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
 
         return storeMapper.toInquiryDetailDTO(store);
+    }
+
+    public PageResponse<StoreSearchByKeywordDTO> searchStoresByKeyword(final String keyword, Pageable pageable) {
+        Page<Store> stores = storeRepository.findByKeyword(keyword, pageable);
+
+        return new PageResponse<>(
+                stores.map(storeMapper::toSearchByKeywordDTO).stream().toList(),
+                stores.hasNext()
+        );
     }
 }

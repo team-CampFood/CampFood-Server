@@ -3,6 +3,7 @@ package com.campfood.src.store.mapper;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.dto.StoreInquiryDetailDTO;
+import com.campfood.src.store.dto.StoreSearchByKeywordDTO;
 import com.campfood.src.store.entity.*;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,7 @@ public class StoreMapper {
     public StoreInquiryAllDTO toInquiryByTagDTO(Store store) {
 
         return StoreInquiryAllDTO.builder()
+                .storeId(store.getId())
                 .storeName(store.getName())
                 .storeTags(toTags(store.getStoreTags()))
                 .storeImage(store.getImage())
@@ -44,6 +46,7 @@ public class StoreMapper {
                 .toList();
 
         return StoreInquiryDetailDTO.builder()
+                .storeId(store.getId())
                 .storeName(store.getName())
                 .storeTags(toTags(store.getStoreTags()))
                 .storeImage(store.getImage())
@@ -55,6 +58,17 @@ public class StoreMapper {
                 .storeAddress(store.getAddress())
                 .openTimeInfos(openTimeInfos)
                 .storeNumber(store.getStoreNumber())
+                .build();
+    }
+
+    public StoreSearchByKeywordDTO toSearchByKeywordDTO(Store store) {
+        return StoreSearchByKeywordDTO.builder()
+                .storeId(store.getId())
+                .storeName(store.getName())
+                .storeTags(toTags(store.getStoreTags()))
+                .storeImage(store.getImage())
+                .campFoodRate(store.getCampFoodRate())
+                .campFoodReviewCnt(store.getCampFoodReviewCnt())
                 .build();
     }
 

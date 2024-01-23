@@ -12,14 +12,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreInquiryAllDTO {
+public class StoreSearchByKeywordDTO {
     private Long storeId;
     private String storeName;
     private List<Tag> storeTags;
     private String storeImage;
-    private double naverRate;
-    private int naverVisitedReviewCnt;
-    private int naverBlogReviewCnt;
     private double campFoodRate;
-    private int camFoodReviewCnt;
+    private int campFoodReviewCnt;
 }
