@@ -12,7 +12,8 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED(401,"AOO3", "리프래시토큰이 만료되었습니다."),
     TOKEN_NULL(401, "A004", "토큰이 존재하지 않습니다."),
     ACCESS_TOKEN_EXPIRED(401, "A005", "엑세스토큰이 만료되었습니다."),
-    ACCESS_TOKEN_MISMATCH(401, "A006", "엑세스토큰이 일치하지 않습니다.");
+    ACCESS_TOKEN_MISMATCH(401, "A006", "엑세스토큰이 일치하지 않습니다."),
+    PASSWORD_MISMATCH(400, "A007", "비밀번호가 일치하지 않습니다.");
 
 
     final private int status;
