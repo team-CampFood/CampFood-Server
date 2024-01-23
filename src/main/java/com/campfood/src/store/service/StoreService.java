@@ -3,10 +3,7 @@ package com.campfood.src.store.service;
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.store.dto.PageResponse;
-import com.campfood.src.store.dto.StoreInquiryDetailDTO;
-import com.campfood.src.store.dto.StoreInquiryAllDTO;
-import com.campfood.src.store.dto.StoreSearchByKeywordDTO;
+import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
 import com.campfood.src.store.entity.Tag;
@@ -18,6 +15,7 @@ import com.campfood.src.university.entity.University;
 import com.campfood.src.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,5 +88,23 @@ public class StoreService {
                 stores.map(storeMapper::toSearchByKeywordDTO).stream().toList(),
                 stores.hasNext()
         );
+    }
+
+    public List<StoreInquiryPopularDTO> inquiryStoresByPopular(String universityName) {
+        // 대학교 명을 안 보냈을 경우 전체에서 조회
+        if (universityName == null) {
+            List<Store> stores = storeRepository.findTop10ByOrderByCampFoodRateDesc();
+            return stores.stream()
+                    .map(storeMapper::toInquiryByPopularDTO)
+                    .toList();
+        }
+
+        University university = universityService.findUniversityByName(universityName);
+
+        List<Store> stores = storeRepository.findTop10ByUniversityAndOrderByCampFoodRateDesc(university, PageRequest.of(0, 10));
+
+        return stores.stream()
+                .map(storeMapper::toInquiryByPopularDTO)
+                .toList();
     }
 }

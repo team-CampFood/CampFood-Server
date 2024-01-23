@@ -3,6 +3,7 @@ package com.campfood.src.store.mapper;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.StoreInquiryAllDTO;
 import com.campfood.src.store.dto.StoreInquiryDetailDTO;
+import com.campfood.src.store.dto.StoreInquiryPopularDTO;
 import com.campfood.src.store.dto.StoreSearchByKeywordDTO;
 import com.campfood.src.store.entity.*;
 import org.springframework.stereotype.Component;
@@ -69,6 +70,14 @@ public class StoreMapper {
                 .storeImage(store.getImage())
                 .campFoodRate(store.getCampFoodRate())
                 .campFoodReviewCnt(store.getCampFoodReviewCnt())
+                .build();
+    }
+
+    public StoreInquiryPopularDTO toInquiryByPopularDTO(Store store) {
+        return StoreInquiryPopularDTO.builder()
+                .storeId(store.getId())
+                .storeImage(store.getImage())
+                .storeTag(toTags(store.getStoreTags()).get(0))
                 .build();
     }
 

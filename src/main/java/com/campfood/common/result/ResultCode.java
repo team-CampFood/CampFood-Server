@@ -21,6 +21,7 @@ public enum     ResultCode {
     INQUIRY_STORES_BY_UNIVERSITY_SUCCESS(200, "S004", "특정 학교 가게 목록 조회에 성공하였습니다."),
     INQUIRY_STORE_DETAIL_SUCCESS(200, "S005", "특정 가게 상세 조회에 성공하였습니다."),
     SEARCH_STORES_BY_KEYWORD_SUCCESS(200, "S006", "가게 검색에 성공하였습니다."),
+    INQUIRY_STORES_BY_POPULAR(200, "S007", "인기 가게 조회에 성공하였습니다."),
     ;
 
     private final int status;
