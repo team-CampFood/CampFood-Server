@@ -5,6 +5,7 @@ import com.campfood.src.member.redis.RefreshToken;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -16,8 +17,12 @@ import java.util.*;
 @Log4j2
 @Component
 public class TokenProvider {
+    private static String secretKey;
 
-    private static final String secretKey = "example";
+    @Value("${jwt.token.key}")
+    public void setSecretKey(String secretKey) {
+        TokenProvider.secretKey = secretKey;
+    }
 
     public static String generateJwtToken(Member member) {
         JwtBuilder builder = Jwts.builder()
