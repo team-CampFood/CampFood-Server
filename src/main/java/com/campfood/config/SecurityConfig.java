@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/home"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/"))
                 .invalidateHttpSession(true);
     }
 
@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());
-        customAuthenticationFilter.setFilterProcessesUrl("/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customLoginSuccessHandler());
         customAuthenticationFilter.setAuthenticationFailureHandler(customLoginFailureHandler());
         customAuthenticationFilter.afterPropertiesSet();
