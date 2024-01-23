@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-
 import java.io.IOException;
+
 
 @Log4j2
 @RequiredArgsConstructor
@@ -28,7 +28,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         final String accessToken = TokenProvider.generateJwtToken(member);
         final RefreshToken refreshToken = TokenProvider.generateJwtRefreshToken(member);
         refreshTokenRepository.save(refreshToken);
-
         response.addHeader(AuthConstants.AUTH_HEADER_ACCESS, accessToken);
         response.addHeader(AuthConstants.AUTH_HEADER_REFRESH, refreshToken.getRefreshToken());
     }
