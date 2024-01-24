@@ -60,4 +60,5 @@ public class AuthController {
         httpServletRequest.getSession().invalidate();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.WITHDRAWAL_SUCCESS));
     }
+
 }
