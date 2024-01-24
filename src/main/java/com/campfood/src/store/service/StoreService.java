@@ -11,7 +11,7 @@ import com.campfood.src.store.entity.Category;
 import com.campfood.src.store.mapper.StoreMapper;
 import com.campfood.src.store.repository.StoreHeartRepository;
 import com.campfood.src.store.repository.StoreRepository;
-import com.campfood.src.store.repository.StoreTagRepository;
+import com.campfood.src.store.repository.StoreCategoryRepository;
 import com.campfood.src.university.entity.University;
 import com.campfood.src.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final StoreHeartRepository storeHeartRepository;
-    private final StoreTagRepository storeTagRepository;
+    private final StoreCategoryRepository storeCategoryRepository;
 
     private final UniversityService universityService;
 
@@ -58,7 +58,7 @@ public class StoreService {
 
     public PageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Category category, Pageable pageable) {
 
-        Page<Store> stores = storeTagRepository.findAllByTag(category, pageable);
+        Page<Store> stores = storeCategoryRepository.findAllByTag(category, pageable);
 
         return new PageResponse<>(
                 stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),

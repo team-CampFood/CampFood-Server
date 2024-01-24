@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StoreTagRepository extends JpaRepository<StoreCategory, Long> {
+public interface StoreCategoryRepository extends JpaRepository<StoreCategory, Long> {
 
-    @Query("SELECT st.store FROM StoreCategory st WHERE st.tag = :tag")
-    Page<Store> findAllByTag(@Param("tag") Category category, Pageable pageable);;
+    @Query("SELECT sc.store FROM StoreCategory sc WHERE sc.category = :category")
+    Page<Store> findAllByTag(@Param("category") Category category, Pageable pageable);;
 }
