@@ -17,8 +17,10 @@ public enum     ResultCode {
     VALID_LOGIN_ID(200, "A006", "사용가능한 id입니다."),
     INVALID_LOGIN_ID(200, "A007", "사용가능하지 않은 id입니다."),
     WITHDRAWAL_SUCCESS(200,"A008", "회원탈퇴에 성공하였습니다."),
-    LOGOUT_SUCCESS(200,"A009", "로그아웃에 성공하였습니다.");
+    LOGOUT_SUCCESS(200,"A009", "로그아웃에 성공하였습니다."),
 
+    //member
+    GET_MEMBER_INFO_SUCCESS(200, "M001", "멤버정보 조회에 성공하였습니다.");
 
     private final int status;
     private final String code;

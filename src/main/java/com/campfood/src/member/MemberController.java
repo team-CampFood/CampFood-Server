@@ -2,10 +2,9 @@ package com.campfood.src.member;
 
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
-import com.campfood.src.member.dto.LoginDto;
-import com.campfood.src.member.dto.MemberDeleteDto;
-import com.campfood.src.member.dto.SignUpDto;
+import com.campfood.src.member.dto.*;
 import com.campfood.src.member.response.LoginIdCheckResponse;
+import com.campfood.src.member.response.MemberInfoResponse;
 import com.campfood.src.member.response.NicknameCheckResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -44,7 +43,18 @@ public class MemberController {
         return ResponseEntity.ok(LoginIdCheckResponse.of(result, isDuplicated));
     }
 
+    @ApiOperation(value = "회원정보 불러오기")
+    @GetMapping()
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(){
+        MemberInfoDto memberInfoDto = memberService.getMemberInfo();
+        return ResponseEntity.ok(MemberInfoResponse.of(ResultCode.GET_MEMBER_INFO_SUCCESS, memberInfoDto));
+    }
 
-
+    @ApiOperation(value = "회원정보 수정하기")
+    @PutMapping()
+    public ResponseEntity<MemberInfoResponse> putMemberInfo(@RequestBody MemberInfoRequestDto memberInfoRequestDto){
+        MemberInfoDto memberInfoDto = memberService.putMemberInfo(memberInfoRequestDto);
+        return ResponseEntity.ok(MemberInfoResponse.of(ResultCode.GET_MEMBER_INFO_SUCCESS, memberInfoDto));
+    }
 
 }
