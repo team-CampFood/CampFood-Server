@@ -2,6 +2,7 @@ package com.campfood.src.store.service;
 
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
+import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Store;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +35,19 @@ public class StoreService {
     private final UniversityService universityService;
 
     private final StoreMapper storeMapper;
+    private final AuthUtils authUtils;
 
     @Transactional
     public boolean toggleStoreHeart(Long storeId) {
         // 로그인 유저 -> 받아오는 로직 필요
-        Member member = Member.builder().build();
+        Member loginMember = authUtils.getMemberByAuthentication();
 
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
 
-        StoreHeart storeHeart = storeHeartRepository.findByMemberAndStore(member, store)
+        StoreHeart storeHeart = storeHeartRepository.findByMemberAndStore(loginMember, store)
                 .orElseGet(() -> {
-                    StoreHeart newStoreHeart = storeMapper.toStoreHeart(member, store);
+                    StoreHeart newStoreHeart = storeMapper.toStoreHeart(loginMember, store);
                     return storeHeartRepository.save(newStoreHeart);
                 });
 
@@ -58,7 +61,7 @@ public class StoreService {
         Page<Store> stores = storeTagRepository.findAllByTag(category, pageable);
 
         return new PageResponse<>(
-                stores.map(storeMapper::toInquiryByTagDTO).stream().toList(),
+                stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
@@ -69,7 +72,7 @@ public class StoreService {
         Page<Store> stores = storeRepository.findAllByUniversity(university, pageable);
 
         return new PageResponse<>(
-                stores.map(storeMapper::toInquiryByTagDTO).stream().toList(),
+                stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }

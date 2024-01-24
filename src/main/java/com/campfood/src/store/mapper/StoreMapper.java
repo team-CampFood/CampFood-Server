@@ -90,9 +90,7 @@ public class StoreMapper {
     private StoreInquiryDetailDTO.OpenTimeInfo toOpenTimeInfo(StoreOpenTime storeOpenTime) {
         return StoreInquiryDetailDTO.OpenTimeInfo.builder()
                 .day(storeOpenTime.getDay())
-                .openTime(storeOpenTime.getOpenTime())
-                .breakTime(storeOpenTime.getBreakTime())
-                .lastOrder(storeOpenTime.getLastOrder())
+                .content(storeOpenTime.getContent())
                 .build();
     }
 }
