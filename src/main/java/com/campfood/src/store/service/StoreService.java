@@ -6,7 +6,7 @@ import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreHeart;
-import com.campfood.src.store.entity.Tag;
+import com.campfood.src.store.entity.Category;
 import com.campfood.src.store.mapper.StoreMapper;
 import com.campfood.src.store.repository.StoreHeartRepository;
 import com.campfood.src.store.repository.StoreRepository;
@@ -53,9 +53,9 @@ public class StoreService {
         return storeHeart.isChecked();
     }
 
-    public PageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Tag tag, Pageable pageable) {
+    public PageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Category category, Pageable pageable) {
 
-        Page<Store> stores = storeTagRepository.findAllByTag(tag, pageable);
+        Page<Store> stores = storeTagRepository.findAllByTag(category, pageable);
 
         return new PageResponse<>(
                 stores.map(storeMapper::toInquiryByTagDTO).stream().toList(),

@@ -13,9 +13,8 @@ public enum OpenDay {
     FRIDAY("금요일"),
     SATURDAY("토요일"),
     SUNDAY("일요일"),
-    WEEKDAY("주중"),
-    WEEKEND("주말"),
-    ALL_DAY("매일");
+    ALL_DAY("매일"),
+    ETC("이외");
 
     private final String toKorean;
 

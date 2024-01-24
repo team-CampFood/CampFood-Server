@@ -3,7 +3,7 @@ package com.campfood.src.store.controller;
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.store.dto.*;
-import com.campfood.src.store.entity.Tag;
+import com.campfood.src.store.entity.Category;
 import com.campfood.src.store.response.StoreResponse;
 import com.campfood.src.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +37,14 @@ public class StoreController {
 
     @Operation(summary = "특정 태그 가게 조회")
     @GetMapping
-    public ResponseEntity<StoreResponse<PageResponse<StoreInquiryAllDTO>>> inquiryStoresByTag(@RequestParam Tag tag,
+    public ResponseEntity<StoreResponse<PageResponse<StoreInquiryAllDTO>>> inquiryStoresByTag(@RequestParam Category category,
                                                                           @RequestParam String sort,
                                                                           @RequestParam Sort.Direction direction,
                                                                           @PageableDefault(page = 1) Pageable pageable) {
         Sort sorting = Sort.by(direction, sort);
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
 
-        PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(tag, pageable);
+        PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(category, pageable);
         return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
     }
 

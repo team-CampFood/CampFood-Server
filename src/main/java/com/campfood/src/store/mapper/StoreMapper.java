@@ -30,7 +30,7 @@ public class StoreMapper {
         return StoreInquiryAllDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
-                .storeTags(toTags(store.getStoreTags()))
+                .storeCategories(toTags(store.getStoreCategories()))
                 .storeImage(store.getImage())
                 .naverRate(store.getNaverRate())
                 .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
@@ -49,7 +49,7 @@ public class StoreMapper {
         return StoreInquiryDetailDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
-                .storeTags(toTags(store.getStoreTags()))
+                .storeCategories(toTags(store.getStoreCategories()))
                 .storeImage(store.getImage())
                 .naverRate(store.getNaverRate())
                 .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
@@ -66,7 +66,7 @@ public class StoreMapper {
         return StoreSearchByKeywordDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
-                .storeTags(toTags(store.getStoreTags()))
+                .storeCategories(toTags(store.getStoreCategories()))
                 .storeImage(store.getImage())
                 .campFoodRate(store.getCampFoodRate())
                 .campFoodReviewCnt(store.getCampFoodReviewCnt())
@@ -77,13 +77,13 @@ public class StoreMapper {
         return StoreInquiryPopularDTO.builder()
                 .storeId(store.getId())
                 .storeImage(store.getImage())
-                .storeTag(toTags(store.getStoreTags()).get(0))
+                .storeCategory(toTags(store.getStoreCategories()).get(0))
                 .build();
     }
 
-    private List<Tag> toTags(List<StoreTag> storeTags) {
-        return storeTags.stream()
-                .map(StoreTag::getTag)
+    private List<Category> toTags(List<StoreCategory> storeCategories) {
+        return storeCategories.stream()
+                .map(StoreCategory::getCategory)
                 .collect(Collectors.toList());
     }
 

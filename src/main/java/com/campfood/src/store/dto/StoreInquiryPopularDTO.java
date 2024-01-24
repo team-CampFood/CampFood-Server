@@ -1,6 +1,6 @@
 package com.campfood.src.store.dto;
 
-import com.campfood.src.store.entity.Tag;
+import com.campfood.src.store.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class StoreInquiryPopularDTO {
     private Long storeId;
     private String storeImage;
-    private Tag storeTag;
+    private Category storeCategory;
 }

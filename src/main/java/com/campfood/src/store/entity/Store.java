@@ -62,7 +62,7 @@ public class Store extends BaseEntity {
     private String storeNumber;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<StoreTag> storeTags;
+    private List<StoreCategory> storeCategories;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<StoreOpenTime> storeOpenTimes;

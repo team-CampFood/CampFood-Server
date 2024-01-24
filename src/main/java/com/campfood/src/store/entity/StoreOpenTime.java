@@ -26,10 +26,6 @@ public class StoreOpenTime extends BaseEntity {
     @Column(nullable = false)
     private OpenDay day;
 
-    private String openTime;
-
-    private String breakTime;
-
-    private String lastOrder;
+    private String content;
 
 }

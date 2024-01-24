@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Tag {
+public enum Category {
     KOREAN_FOOD("한식"),
     JAPANESE_FOOD("일식"),
     CHINESE_FOOD("중식"),

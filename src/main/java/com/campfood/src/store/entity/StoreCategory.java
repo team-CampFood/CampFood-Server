@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreTag extends BaseEntity {
+public class StoreCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,5 @@ public class StoreTag extends BaseEntity {
     private Store store;
 
     @Column(nullable = false)
-    private Tag tag;
+    private Category category;
 }

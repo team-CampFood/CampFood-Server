@@ -1,13 +1,12 @@
 package com.campfood.src.store.dto;
 
 import com.campfood.src.store.entity.OpenDay;
-import com.campfood.src.store.entity.Tag;
+import com.campfood.src.store.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
 import java.util.List;
 
 @Getter
@@ -17,7 +16,7 @@ import java.util.List;
 public class StoreInquiryDetailDTO {
     private Long storeId;
     private String storeName;
-    private List<Tag> storeTags;
+    private List<Category> storeCategories;
     private String storeImage;
     private double naverRate;
     private int naverVisitedReviewCnt;
@@ -32,8 +31,6 @@ public class StoreInquiryDetailDTO {
     @Builder
     public static class OpenTimeInfo {
         private OpenDay day;
-        private String openTime;
-        private String breakTime;
-        private String lastOrder;
+        private String content;
     }
 }
