@@ -71,7 +71,7 @@ public class StoreController {
     @ApiOperation(value = "가게 검색")
     @GetMapping("/search")
     public ResponseEntity<StoreResponse<PageResponse<StoreSearchByKeywordDTO>>> searchStoresByKeyword(@RequestParam String keyword,
-                                                                                              @PageableDefault(page = 1) Pageable pageable) {
+                                                                                                      @PageableDefault(page = 1) Pageable pageable) {
         PageResponse<StoreSearchByKeywordDTO> responseDTO = storeService.searchStoresByKeyword(keyword, pageable);
         return ResponseEntity.ok(StoreResponse.of(ResultCode.SEARCH_STORES_BY_KEYWORD_SUCCESS, responseDTO));
     }
@@ -81,6 +81,5 @@ public class StoreController {
     public ResponseEntity<StoreResponse<List<StoreInquiryPopularDTO>>> inquiryStoresByRate(@RequestParam(required = false) String university) {
         List<StoreInquiryPopularDTO> responseDTO = storeService.inquiryStoresByPopular(university);
         return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_POPULAR, responseDTO));
-
     }
 }

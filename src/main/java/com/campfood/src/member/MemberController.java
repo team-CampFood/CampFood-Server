@@ -1,17 +1,17 @@
 package com.campfood.src.member;
 
 import com.campfood.common.result.ResultCode;
+
+import com.campfood.src.member.dto.*;
 import com.campfood.src.member.response.LoginIdCheckResponse;
+import com.campfood.src.member.response.MemberInfoResponse;
 import com.campfood.src.member.response.NicknameCheckResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.campfood.common.result.ResultCode.*;
 
@@ -39,7 +39,18 @@ public class MemberController {
         return ResponseEntity.ok(LoginIdCheckResponse.of(result, isDuplicated));
     }
 
+    @ApiOperation(value = "회원정보 불러오기")
+    @GetMapping()
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(){
+        MemberInfoDto memberInfoDto = memberService.getMemberInfo();
+        return ResponseEntity.ok(MemberInfoResponse.of(ResultCode.GET_MEMBER_INFO_SUCCESS, memberInfoDto));
+    }
 
-
+    @ApiOperation(value = "회원정보 수정하기")
+    @PutMapping()
+    public ResponseEntity<MemberInfoResponse> putMemberInfo(@RequestBody MemberInfoRequestDto memberInfoRequestDto){
+        MemberInfoDto memberInfoDto = memberService.putMemberInfo(memberInfoRequestDto);
+        return ResponseEntity.ok(MemberInfoResponse.of(ResultCode.GET_MEMBER_INFO_SUCCESS, memberInfoDto));
+    }
 
 }
