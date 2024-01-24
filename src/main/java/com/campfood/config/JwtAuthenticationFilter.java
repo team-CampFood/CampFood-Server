@@ -36,9 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = req.getHeader(AuthConstants.AUTH_HEADER_ACCESS);
             if (token != null) {
-                String memberEmail = TokenProvider.getMemberEmailFromToken(token);
+                String loginId = TokenProvider.getLoginIdFromToken(token);
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        memberEmail,
+                        loginId,
                         null,
                         AuthorityUtils.NO_AUTHORITIES
                 );
@@ -48,24 +48,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(securityContext);
             }
         } catch (ExpiredJwtException ex) {
-            if(!req.getRequestURI().equals("/refresh")){
-                Map<String, String> map = new HashMap<>();
-                res.setContentType("application/json");
-                res.setCharacterEncoding("utf-8");
-                map.put("status", "401");
-                map.put("message", "ACCESS TOKEN EXPIRED");
-                map.put("code", "A000");
-                res.getWriter().write(objectMapper.writeValueAsString(map));
-                res.setStatus(401);
-                return;
-            }
-        } catch (MalformedJwtException | SignatureException e){
+            Map<String, String> map = new HashMap<>();
+            res.setContentType("application/json");
+            res.setCharacterEncoding("utf-8");
+            map.put("status", "401");
+            map.put("message", "ACCESS TOKEN EXPIRED");
+            map.put("code", "A005");
+            res.getWriter().write(objectMapper.writeValueAsString(map));
+            res.setStatus(401);
+            return;
+        } catch (MalformedJwtException | SignatureException e){ //another exception
             Map<String, String> map = new HashMap<>();
             res.setContentType("application/json");
             res.setCharacterEncoding("utf-8");
             map.put("status", "401");
             map.put("message", "ACCESS TOKEN MISMATCH");
-            map.put("code", "A000");
+            map.put("code", "A006");
             res.getWriter().write(objectMapper.writeValueAsString(map));
             res.setStatus(401);
             return;
