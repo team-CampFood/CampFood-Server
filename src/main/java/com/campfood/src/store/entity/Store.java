@@ -2,7 +2,6 @@ package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
 import com.campfood.src.university.entity.University;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity

@@ -1,11 +1,8 @@
 package com.campfood.src.member.entity;
 
-import com.campfood.common.entity.BaseEntity;
-import com.campfood.src.university.entity.University;
-import javax.persistence.*;
-
 import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @ToString

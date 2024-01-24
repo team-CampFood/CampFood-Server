@@ -2,9 +2,13 @@ package com.campfood.src.member.Auth;
 
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.redis.RefreshToken;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -16,12 +20,16 @@ import java.util.*;
 @Log4j2
 @Component
 public class TokenProvider {
+    private static String secretKey;
 
-    private static final String secretKey = "example";
+    @Value("${jwt.token.key}")
+    public void setSecretKey(String secretKey) {
+        TokenProvider.secretKey = secretKey;
+    }
 
     public static String generateJwtToken(Member member) {
         JwtBuilder builder = Jwts.builder()
-                .setSubject(member.getNickname())
+                .setSubject(member.getLoginId())
                 .setHeader(createHeader())
                 .setClaims(createClaims(member))
                 .setExpiration(setExpireTime())
@@ -31,29 +39,6 @@ public class TokenProvider {
 
     public static RefreshToken generateJwtRefreshToken(Member member) {
         return new RefreshToken(UUID.randomUUID().toString(), member.getId());
-    }
-
-    public static String getTokenFromHeader(String header) {
-        return header.split(" ")[1];
-    }
-
-    public static boolean isValidToken(String token) {
-        try {
-            Claims claims = getClaimsFormToken(token);
-            log.info("expireTime :" + claims.getExpiration());
-            log.info("MemberNickname :" + claims.get("memberNickname"));
-            log.info("role :" + claims.get("role"));
-            return true;
-        } catch (ExpiredJwtException exception) {
-            log.error("Token expired");
-            return false;
-        } catch (JwtException exception) {
-            log.error("Token tampered");
-            return false;
-        } catch (NullPointerException exception) {
-            log.error("Token is null");
-            return false;
-        }
     }
 
     private static Map<String, Object> createHeader() {
@@ -72,7 +57,7 @@ public class TokenProvider {
 
     private static Map<String, Object> createClaims(Member member) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("memberNickname", member.getNickname());
+        claims.put("loginId", member.getLoginId());
 //        claims.put("role", member.getRole());
         return claims;
     }
@@ -87,9 +72,9 @@ public class TokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
-    public static String getMemberEmailFromToken(String token) {
-        Claims claims = getClaimsFormToken(token);
-        return (String) claims.get("memberEmail");
-    }
 
+    public static String getLoginIdFromToken(String token) {
+        Claims claims = getClaimsFormToken(token);
+        return (String) claims.get("loginId");
+    }
 }

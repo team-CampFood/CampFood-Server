@@ -4,12 +4,12 @@ import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Tag;
-import com.campfood.src.store.service.StoreService;
 import com.campfood.src.store.response.StoreResponse;
-import com.campfood.src.university.entity.University;
+import com.campfood.src.store.service.StoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Api(tags = "Store")
+@Log4j2
 @RestController
 @RequestMapping("/store")
 @RequiredArgsConstructor
