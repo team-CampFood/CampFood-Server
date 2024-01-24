@@ -17,7 +17,6 @@ import java.security.Key;
 import java.util.*;
 
 @Slf4j
-@Log4j2
 @Component
 public class TokenProvider {
     private static String secretKey;

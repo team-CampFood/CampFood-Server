@@ -44,7 +44,7 @@ public class StoreMapper {
 
         List<StoreInquiryDetailDTO.OpenTimeInfo> openTimeInfos = store.getStoreOpenTimes().stream()
                 .map(this::toOpenTimeInfo)
-                .toList();
+                .collect(Collectors.toList());
 
         return StoreInquiryDetailDTO.builder()
                 .storeId(store.getId())
@@ -89,7 +89,7 @@ public class StoreMapper {
 
     private StoreInquiryDetailDTO.OpenTimeInfo toOpenTimeInfo(StoreOpenTime storeOpenTime) {
         return StoreInquiryDetailDTO.OpenTimeInfo.builder()
-                .day(storeOpenTime.getDayOfWeek())
+                .day(storeOpenTime.getDay())
                 .openTime(storeOpenTime.getOpenTime())
                 .breakTime(storeOpenTime.getBreakTime())
                 .lastOrder(storeOpenTime.getLastOrder())

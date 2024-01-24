@@ -1,5 +1,6 @@
 package com.campfood.src.store.dto;
 
+import com.campfood.src.store.entity.OpenDay;
 import com.campfood.src.store.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,7 @@ public class StoreInquiryDetailDTO {
     @Getter
     @Builder
     public static class OpenTimeInfo {
-        private DayOfWeek day;
+        private OpenDay day;
         private String openTime;
         private String breakTime;
         private String lastOrder;

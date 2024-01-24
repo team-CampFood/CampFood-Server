@@ -24,7 +24,7 @@ public class StoreOpenTime extends BaseEntity {
     private Store store;
 
     @Column(nullable = false)
-    private DayOfWeek dayOfWeek;
+    private OpenDay day;
 
     private String openTime;
 

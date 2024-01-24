@@ -56,6 +56,9 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
+    private String directionX;
+    private String directionY;
+
     private String storeNumber;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
