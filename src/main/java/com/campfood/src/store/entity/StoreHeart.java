@@ -1,31 +1,36 @@
 package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
+import com.campfood.src.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.DayOfWeek;
 
 @Entity
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreOpenTime extends BaseEntity {
+public class StoreHeart extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    private boolean isChecked;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Store store;
 
-    @Column(nullable = false)
-    private OpenDay day;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Member member;
 
-    private String content;
-
+    public void toggleStoreHeart() {
+        this.isChecked = !this.isChecked;
+    }
 }

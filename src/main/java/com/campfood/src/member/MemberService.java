@@ -1,5 +1,8 @@
 package com.campfood.src.member;
 
+import com.campfood.src.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import com.campfood.src.member.dto.MemberInfoDto;
 import com.campfood.src.member.dto.MemberInfoRequestDto;
 import com.campfood.src.member.repository.MemberRepository;

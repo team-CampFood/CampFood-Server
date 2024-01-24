@@ -2,18 +2,17 @@ package com.campfood.src.member.response;
 
 import com.campfood.common.result.ResultCode;
 import com.campfood.src.member.dto.MemberInfoDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
-@ApiModel(description = "멤버 상세정보 응답 모델")
+@Schema(description = "멤버 상세정보 응답 모델")
 public class MemberInfoResponse {
-    @ApiModelProperty(value = "Business 상태 코드")
+    @Schema(description = "Business 상태 코드")
     private final String code;
-    @ApiModelProperty(value = "응답 메세지")
+    @Schema(description = "응답 메세지")
     private final String message;
-    @ApiModelProperty(value = "응답 데이터")
+    @Schema(description = "응답 데이터")
     private final MemberInfoDto data;
 
 

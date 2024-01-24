@@ -13,8 +13,14 @@ public enum ErrorCode {
     TOKEN_NULL(401, "E004", "토큰이 존재하지 않습니다."),
     ACCESS_TOKEN_EXPIRED(401, "E005", "엑세스토큰이 만료되었습니다."),
     ACCESS_TOKEN_MISMATCH(401, "E006", "엑세스토큰이 일치하지 않습니다."),
-    PASSWORD_MISMATCH(400, "E007", "비밀번호가 일치하지 않습니다.");
+    PASSWORD_MISMATCH(400, "E007", "비밀번호가 일치하지 않습니다."),
 
+    // Store
+    STORE_NOT_EXIST(500, "S001", "존재하지 않는 가게입니다."),
+
+    // University
+    UNIVERSITY_NOT_EXIST(500, "U001", "존재하지 않는 대학교입니다."),
+    ;
 
     final private int status;
     final private String errorCode;

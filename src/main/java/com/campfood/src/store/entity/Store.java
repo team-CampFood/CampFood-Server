@@ -2,53 +2,71 @@ package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
 import com.campfood.src.university.entity.University;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
+import javax.persistence.*;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Store")
+@DynamicInsert
 public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "store_id", nullable = false)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "university_id", nullable = false)
+    @JoinColumn()
     private University university;
 
-    @Column(name = "identification_id", nullable = false)
+    @Column(nullable = false)
     private String identificationId;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    private String image;
+
     private String description;
 
-    @Column(name = "naver_rate", nullable = false)
+    @ColumnDefault("0.0")
     private Double naverRate;
 
-    @Column(name = "visitedReview_cnt", nullable = false)
-    private int visitedReviewCnt;
+    @ColumnDefault("0")
+    private int naverVisitedReviewCnt;
 
-    @Column(name = "blogReview_cnt", nullable = false)
-    private int blogReviewCnt;
+    @ColumnDefault("0")
+    private int naverBlogReviewCnt;
 
-    @Column(name = "address", nullable = false)
+    @ColumnDefault("0.0")
+    private Double campFoodRate;
+
+    @ColumnDefault("0")
+    private int campFoodReviewCnt;
+
+    @Column(nullable = false)
     private String address;
 
-    @Column(name = "storeNumber")
+    private String directionX;
+    private String directionY;
+
     private String storeNumber;
 
-    @Column(name = "storeTag")
-    private  StoreTag storeTag;
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<StoreCategory> storeCategories;
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<StoreOpenTime> storeOpenTimes;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private List<StoreUniversity> universities;
 }

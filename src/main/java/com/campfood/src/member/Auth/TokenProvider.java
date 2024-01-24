@@ -2,7 +2,10 @@ package com.campfood.src.member.Auth;
 
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.redis.RefreshToken;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +17,6 @@ import java.security.Key;
 import java.util.*;
 
 @Slf4j
-@Log4j2
 @Component
 public class TokenProvider {
     private static String secretKey;
