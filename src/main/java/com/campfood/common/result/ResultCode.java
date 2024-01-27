@@ -19,6 +19,10 @@ public enum     ResultCode {
     WITHDRAWAL_SUCCESS(200,"A008", "회원탈퇴에 성공하였습니다."),
     LOGOUT_SUCCESS(200,"A009", "로그아웃에 성공하였습니다."),
 
+    //mail
+    EMAIL_SEND_SUCCESS(200,"M001", "이메일 전송에 성공하였습니다."),
+    EMAIL_VERIFIED_SUCCESS (200,"M002", "인증번호가 일치합니다."),
+    EMAIL_VERIFIED_FAILED(200,"M003", "인증번호가 일치하지 않습니다."),
     //member
     GET_MEMBER_INFO_SUCCESS(200, "M001", "멤버정보 조회에 성공하였습니다."),
 
