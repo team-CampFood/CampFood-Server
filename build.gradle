@@ -57,6 +57,10 @@ dependencies {
 	compileOnly 'org.slf4j:slf4j-api:1.7.5'
 	implementation "com.sparkjava:spark-core:2.9.3"
 
+	//smtp
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'javax.mail:javax.mail-api:1.6.2'
+
 }
 
 tasks.named('test') {
