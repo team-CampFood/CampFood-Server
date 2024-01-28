@@ -18,13 +18,17 @@ public class ProfileImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_image_id", nullable = false)
     private Long id;
-/*
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-*/
+
     @Column(name = "url", nullable = false)
     private String url;
+
+    public void updateUrl(String url){
+        this.url = url;
+    }
 
 }
 
