@@ -1,20 +1,17 @@
 package com.campfood.src.member;
 
+import com.campfood.common.error.ErrorCode;
 import com.campfood.common.result.ResultCode;
 
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.member.dto.*;
-import com.campfood.src.member.response.LoginIdCheckResponse;
 import com.campfood.src.member.response.MemberInfoResponse;
-import com.campfood.src.member.response.NicknameCheckResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static com.campfood.common.result.ResultCode.*;
 
 @Tag(name="Member")
 @RequiredArgsConstructor
@@ -26,18 +23,16 @@ public class MemberController {
 
     @Operation(summary = "닉네임 중복 확인")
     @PostMapping("/nickname/{nickname}")
-    public ResponseEntity<NicknameCheckResponse> nicknameDuplicationCheck(@PathVariable(value = "nickname") String nickname){
-        boolean isDuplicated = memberService.nicknameDuplicationCheck(nickname);
-        ResultCode result = (isDuplicated ? INVALID_NICKNAME : VALID_NICKNAME);
-        return ResponseEntity.ok(NicknameCheckResponse.of(result, isDuplicated));
+    public ResponseEntity<ResultResponse> nicknameDuplicationCheck(@PathVariable(value = "nickname") String nickname){
+        memberService.nicknameDuplicationCheck(nickname);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.VALID_NICKNAME, "사용 가능한 닉네임입니다."));
     }
 
     @Operation(summary = "로그인 id 중복 확인")
     @PostMapping("/login-id/{loginId}")
-    public ResponseEntity<LoginIdCheckResponse> loginIdDuplicationCheck(@PathVariable(value = "loginId") String loginId){
-        boolean isDuplicated = memberService.loginIdDuplicationCheck(loginId);
-        ResultCode result = (isDuplicated ? INVALID_LOGIN_ID : VALID_LOGIN_ID);
-        return ResponseEntity.ok(LoginIdCheckResponse.of(result, isDuplicated));
+    public ResponseEntity<ResultResponse> loginIdDuplicationCheck(@PathVariable(value = "loginId") String loginId){
+        memberService.loginIdDuplicationCheck(loginId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.VALID_LOGIN_ID, "사용 가능한 아이디입니다."));
     }
 
     @Operation(summary = "회원정보 불러오기")
