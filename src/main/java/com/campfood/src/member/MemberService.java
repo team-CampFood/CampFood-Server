@@ -1,25 +1,31 @@
 package com.campfood.src.member;
 
 import com.campfood.common.error.ErrorCode;
-import com.campfood.common.exception.CreateAuthCodeException;
-import com.campfood.common.exception.DuplicatedEmailException;
-import com.campfood.src.member.Auth.service.MailService;
+import com.campfood.common.exception.PasswordMismatchException;
+import com.campfood.src.member.Auth.AuthUtils;
+import com.campfood.src.member.dto.ChangePasswordRequestDto;
+import com.campfood.src.member.dto.ChangeProfileRequestDto;
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.member.redis.EmailAuthCode;
-import com.campfood.src.member.redis.EmailAuthCodeRepository;
+import com.campfood.src.member.entity.ProfileImage;
 import com.campfood.src.member.repository.MemberRepository;
+import com.campfood.src.member.repository.ProfileImageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.campfood.src.member.dto.MemberInfoDto;
-import com.campfood.src.member.dto.MemberInfoRequestDto;
+import com.campfood.src.member.dto.ChangeNicknameRequestDto;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final AuthUtils authUtils;
+    private final PasswordEncoder passwordEncoder;
+    private final ProfileImageRepository profileImageRepository;
 
 
     public boolean nicknameDuplicationCheck(String nickname) {
@@ -32,18 +38,55 @@ public class MemberService {
 
     @Transactional
     public MemberInfoDto getMemberInfo() {
-        //get로직
-        return new MemberInfoDto();
+        Member member = authUtils.getMemberByAuthentication();
+        MemberInfoDto memberInfoDto =
+                MemberInfoDto.builder().
+                        nickname(member.getNickname()).
+                        loginId(member.getLoginId()).
+                        email(member.getEmail()).
+                       // university(member.getUniversity().getName()).
+                        myReviewCount(1).build(); // review repository 생성이후 작성
+        return memberInfoDto;
     }
 
     @Transactional
-    public MemberInfoDto putMemberInfo(MemberInfoRequestDto memberInfoRequestDto) {
-        //수정로직
-        return new MemberInfoDto();
+    public MemberInfoDto changeNickname(ChangeNicknameRequestDto memberInfoRequestDto) {
+        Member member = authUtils.getMemberByAuthentication();
+        member.updateNickname(memberInfoRequestDto.getNickname());
+        MemberInfoDto memberInfoDto =
+                MemberInfoDto.builder().
+                        nickname(memberInfoRequestDto.getNickname()).
+                        loginId(member.getLoginId()).
+                        email(member.getEmail()).
+                       // university(member.getUniversity().getName()).
+                        myReviewCount(1).build(); // review repository 생성이후 작성
+
+        return memberInfoDto;
     }
 
 
+    @Transactional
+    public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+        Member member = authUtils.getMemberByAuthentication();
+        if(passwordEncoder.matches(changePasswordRequestDto.getCurPassword(), member.getPassword())) {
+            member.updatePassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
+        }
+        else throw new PasswordMismatchException("password mismatched", ErrorCode.PASSWORD_MISMATCH);
+    }
 
-
-
+    @Transactional
+    public void changeProfile(ChangeProfileRequestDto changeProfileRequestDto) {
+        Member member = authUtils.getMemberByAuthentication();
+        Optional<ProfileImage> curProfileImage = profileImageRepository.findByMember(member);
+        if(curProfileImage.isPresent()) {
+            curProfileImage.get().updateUrl(changeProfileRequestDto.getUrl());
+        }
+        else {
+            ProfileImage profileImage = ProfileImage.builder()
+                    .member(member)
+                    .url(changeProfileRequestDto.getUrl())
+                    .build();
+            profileImageRepository.save(profileImage);
+        }
+    }
 }
