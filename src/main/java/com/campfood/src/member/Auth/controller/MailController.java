@@ -38,8 +38,8 @@ public class MailController {
     @PostMapping("/verify")
     public ResponseEntity<ResultResponse> verifiedCode(@RequestParam("email") @Valid String email,
                                                        @RequestParam("code") String authCode){
-
-        ResultCode resultCode = (mailService.verifiedCode(email, authCode)?EMAIL_VERIFIED_SUCCESS:EMAIL_VERIFIED_FAILED);
-        return ResponseEntity.ok(ResultResponse.of(resultCode));
+        boolean result = mailService.verifiedCode(email, authCode);
+        ResultCode resultCode = (result ? EMAIL_VERIFIED_SUCCESS : EMAIL_VERIFIED_FAILED);
+        return ResponseEntity.ok(ResultResponse.of(resultCode,result));
     }
 }
