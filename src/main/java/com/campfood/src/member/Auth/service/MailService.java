@@ -52,6 +52,8 @@ public class MailService {
         return message;
     }
 
+
+    //이메일로 인증번호 전송
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
         String title = "CampFood 이메일 인증 번호";
@@ -75,10 +77,10 @@ public class MailService {
         }
     }
 
+    //인증번호 검증
     public boolean verifiedCode(String email, String authCode) {
         this.checkDuplicatedEmail(email);
         Optional<EmailAuthCode> emailAuthCode = emailAuthCodeRepository.findById("AuthCode " + email);
-        System.out.println(authCode + "@@@@@@@@@@"+emailAuthCode.get().getEmailAuthCode());
         return authCode.equals(emailAuthCode.get().getEmailAuthCode());
     }
 

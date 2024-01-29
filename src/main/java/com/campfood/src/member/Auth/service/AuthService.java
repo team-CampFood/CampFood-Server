@@ -35,6 +35,8 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthUtils authUtils;
     private final ProfileImageRepository profileImageRepository;
+
+    //회원가입
     @Transactional
     public void signUp(SignUpDto signUpDto){
         if(memberRepository.existsByEmail(signUpDto.getEmail())){
@@ -51,6 +53,7 @@ public class AuthService {
         memberRepository.save(member);
     }
 
+    //엑세스토큰 재발급
     @Transactional
     public HttpHeaders generateNewAccessToken(String refreshToken) {
         Optional<RefreshToken> getRefreshToken= refreshTokenRepository.findById(refreshToken);
@@ -67,6 +70,8 @@ public class AuthService {
         }
 
     }
+
+    //회원탈퇴
     @Transactional
     public void deleteMember(MemberDeleteDto memberDeleteDto) {
         Member member = authUtils.getMemberByAuthentication();
@@ -83,6 +88,7 @@ public class AuthService {
         else throw new PasswordMismatchException("password mismatched", ErrorCode.PASSWORD_MISMATCH);
     }
 
+    //아이디찾기
     @Transactional
     public String findLoginId(FindIdDto findIdDto) {
         Member member = memberRepository.findByEmail(findIdDto.getEmail())
@@ -90,6 +96,8 @@ public class AuthService {
         return member.getLoginId();
     }
 
+
+    //비밀번호변경(비로그인용)
     @Transactional
     public void changePassword(ChangePasswordForUnauthenticatedRequestDto changePasswordRequest) {
         String email = changePasswordRequest.getEmail();
