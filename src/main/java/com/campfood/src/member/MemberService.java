@@ -29,19 +29,21 @@ public class MemberService {
     private final ProfileImageRepository profileImageRepository;
 
 
+    @Transactional
     public void nicknameDuplicationCheck(String nickname) {
         if(memberRepository.existsByNickname(nickname)) {
             throw new DuplicatedLoginIdException("이미 존재하는 닉네임입니다.", ErrorCode.INVALID_NICKNAME);
         }
     }
 
+    @Transactional
     public void loginIdDuplicationCheck(String loginId) {
         if(memberRepository.existsByLoginId(loginId)) {
             throw new DuplicatedLoginIdException("이미 존재하는 로그인id입니다.", ErrorCode.INVALID_LOGIN_ID);
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberInfoDto getMemberInfo() {
         Member member = authUtils.getMemberByAuthentication();
         MemberInfoDto memberInfoDto =
@@ -55,18 +57,9 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberInfoDto changeNickname(ChangeNicknameRequestDto memberInfoRequestDto) {
+    public void changeNickname(ChangeNicknameRequestDto memberInfoRequestDto) {
         Member member = authUtils.getMemberByAuthentication();
         member.updateNickname(memberInfoRequestDto.getNickname());
-        MemberInfoDto memberInfoDto =
-                MemberInfoDto.builder().
-                        nickname(memberInfoRequestDto.getNickname()).
-                        loginId(member.getLoginId()).
-                        email(member.getEmail()).
-                       // university(member.getUniversity().getName()).
-                        myReviewCount(1).build(); // review repository 생성이후 작성
-
-        return memberInfoDto;
     }
 
 

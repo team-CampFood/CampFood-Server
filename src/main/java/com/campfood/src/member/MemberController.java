@@ -44,9 +44,9 @@ public class MemberController {
 
     @Operation(summary = "닉네임 수정하기")
     @PutMapping("/nickname")
-    public ResponseEntity<MemberInfoResponse> changeNickname(@RequestBody ChangeNicknameRequestDto memberInfoRequestDto){
-        MemberInfoDto memberInfoDto = memberService.changeNickname(memberInfoRequestDto);
-        return ResponseEntity.ok(MemberInfoResponse.of(ResultCode.CHANGE_NICKNAME_SUCCESS, memberInfoDto));
+    public ResponseEntity<ResultResponse> changeNickname(@RequestBody ChangeNicknameRequestDto memberInfoRequestDto){
+        memberService.changeNickname(memberInfoRequestDto);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_NICKNAME_SUCCESS));
     }
 
     @Operation(summary = "비밀번호 변경(로그인유저용)")
