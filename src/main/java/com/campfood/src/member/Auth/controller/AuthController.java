@@ -33,8 +33,7 @@ public class AuthController {
 
     @Operation(summary = "로그아웃")
     @PostMapping("/logout")
-    public ResponseEntity<ResultResponse> logout(HttpServletRequest request, HttpServletResponse response){
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.LOGOUT_SUCCESS));
+    public void logout(HttpServletRequest request, HttpServletResponse response){
     }
 
 
