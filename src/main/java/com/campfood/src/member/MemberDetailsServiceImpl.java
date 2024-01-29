@@ -1,7 +1,7 @@
 package com.campfood.src.member;
 
 import com.campfood.common.error.ErrorCode;
-import com.campfood.common.exception.ExampleException;
+import com.campfood.common.exception.MemberNotExistException;
 import com.campfood.src.member.entity.MemberDetails;
 import com.campfood.src.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,6 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     public MemberDetails loadUserByUsername(String loginId) {
         return memberRepository.findByLoginId(loginId)
                 .map(m -> new MemberDetails(m, Collections.singleton(new SimpleGrantedAuthority(m.getRole().getValue()))))
-                .orElseThrow(() -> new ExampleException("member not exist", ErrorCode.MEMBER_NOT_EXIST));
+                .orElseThrow(() -> new MemberNotExistException("member not exist", ErrorCode.MEMBER_NOT_EXIST));
     }
 }
