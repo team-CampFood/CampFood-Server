@@ -1,8 +1,6 @@
 package com.campfood.src.member;
 
-import com.campfood.common.error.ErrorCode;
 import com.campfood.common.result.ResultCode;
-
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.member.dto.*;
 import com.campfood.src.member.response.MemberInfoResponse;
@@ -24,15 +22,17 @@ public class MemberController {
     @Operation(summary = "닉네임 중복 확인")
     @PostMapping("/nickname/{nickname}")
     public ResponseEntity<ResultResponse> nicknameDuplicationCheck(@PathVariable(value = "nickname") String nickname){
-        memberService.nicknameDuplicationCheck(nickname);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.VALID_NICKNAME, "사용 가능한 닉네임입니다."));
+        boolean result = memberService.nicknameDuplicationCheck(nickname);
+        ResultCode resultCode = (result ? ResultCode.INVALID_NICKNAME : ResultCode.VALID_NICKNAME);
+        return ResponseEntity.ok(ResultResponse.of(resultCode, !result));
     }
 
     @Operation(summary = "로그인 id 중복 확인")
     @PostMapping("/login-id/{loginId}")
     public ResponseEntity<ResultResponse> loginIdDuplicationCheck(@PathVariable(value = "loginId") String loginId){
-        memberService.loginIdDuplicationCheck(loginId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.VALID_LOGIN_ID, "사용 가능한 아이디입니다."));
+        boolean result = memberService.loginIdDuplicationCheck(loginId);
+        ResultCode resultCode = (result ? ResultCode.INVALID_LOGIN_ID : ResultCode.VALID_LOGIN_ID);
+        return ResponseEntity.ok(ResultResponse.of(resultCode, !result));
     }
 
     @Operation(summary = "회원정보 불러오기")

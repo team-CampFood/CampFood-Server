@@ -30,17 +30,13 @@ public class MemberService {
 
 
     @Transactional
-    public void nicknameDuplicationCheck(String nickname) {
-        if(memberRepository.existsByNickname(nickname)) {
-            throw new DuplicatedLoginIdException("이미 존재하는 닉네임입니다.", ErrorCode.INVALID_NICKNAME);
-        }
+    public boolean nicknameDuplicationCheck(String nickname) {
+        return memberRepository.existsByNickname(nickname);
     }
 
     @Transactional
-    public void loginIdDuplicationCheck(String loginId) {
-        if(memberRepository.existsByLoginId(loginId)) {
-            throw new DuplicatedLoginIdException("이미 존재하는 로그인id입니다.", ErrorCode.INVALID_LOGIN_ID);
-        }
+    public boolean loginIdDuplicationCheck(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
     }
 
     @Transactional(readOnly = true)

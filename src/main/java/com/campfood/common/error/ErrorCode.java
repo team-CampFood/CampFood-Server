@@ -15,8 +15,6 @@ public enum ErrorCode {
     ACCESS_TOKEN_MISMATCH(401, "E006", "엑세스토큰이 일치하지 않습니다."),
     PASSWORD_MISMATCH(400, "E007", "비밀번호가 일치하지 않습니다."),
     ALREADY_EXIST_MEMBER(400, "E008", "이미 존재하는 유저입니다."),
-    INVALID_LOGIN_ID(400, "E009", "사용가능하지 않은 id입니다."),
-    INVALID_NICKNAME(200, "E010", "사용가능하지 않은 닉네임입니다."),
 
     //Mail
     UNABLE_TO_SEND_EMAIL(401, "M001", "이메일 전송에 실패하였습니다."),
