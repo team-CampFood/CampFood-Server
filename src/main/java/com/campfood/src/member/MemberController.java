@@ -53,14 +53,14 @@ public class MemberController {
     @PutMapping("/password")
     public ResponseEntity<ResultResponse> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto){
         memberService.changePassword(changePasswordRequestDto);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PASSWORD_SUCCESS, "비밀번호 변경에 성공하였습니다."));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PASSWORD_SUCCESS));
     }
 
     @Operation(summary = "프로필사진 등록 및 수정")
     @PutMapping("/profile")
     public ResponseEntity<ResultResponse> changeProfile(@RequestBody ChangeProfileRequestDto changeProfileRequestDto){
         memberService.changeProfile(changeProfileRequestDto);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PROFILE_SUCCESS, "프로필사진 변경에 성공하였습니다."));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PROFILE_SUCCESS));
     }
 
 }

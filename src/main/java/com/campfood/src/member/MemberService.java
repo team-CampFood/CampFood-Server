@@ -28,17 +28,19 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final ProfileImageRepository profileImageRepository;
 
-
+    //닉네임 중복 확인
     @Transactional
     public boolean nicknameDuplicationCheck(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
 
+    //로그인id 중복 확인
     @Transactional
     public boolean loginIdDuplicationCheck(String loginId) {
         return memberRepository.existsByLoginId(loginId);
     }
 
+    //나의 정보 불러오기
     @Transactional(readOnly = true)
     public MemberInfoDto getMemberInfo() {
         Member member = authUtils.getMemberByAuthentication();
@@ -52,13 +54,14 @@ public class MemberService {
         return memberInfoDto;
     }
 
+    //닉네임 변경
     @Transactional
     public void changeNickname(ChangeNicknameRequestDto memberInfoRequestDto) {
         Member member = authUtils.getMemberByAuthentication();
         member.updateNickname(memberInfoRequestDto.getNickname());
     }
 
-
+    //비밀번호 변경 (로그인유저용)
     @Transactional
     public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
         Member member = authUtils.getMemberByAuthentication();
@@ -68,6 +71,7 @@ public class MemberService {
         else throw new PasswordMismatchException("password mismatched", ErrorCode.PASSWORD_MISMATCH);
     }
 
+    //프로필사진 변경 및 수정
     @Transactional
     public void changeProfile(ChangeProfileRequestDto changeProfileRequestDto) {
         Member member = authUtils.getMemberByAuthentication();

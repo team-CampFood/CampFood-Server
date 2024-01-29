@@ -43,6 +43,8 @@ public class AuthService {
             throw new AlreadyExistMemberException("이미 존재하는 유저입니다.", ErrorCode.ALREADY_EXIST_MEMBER);
         }
 
+        //대학교명을 통하여 대학교관련 로직필요
+
         final Member member= Member.builder()
                 .email(signUpDto.getEmail())
                 .loginId(signUpDto.getLoginId())
