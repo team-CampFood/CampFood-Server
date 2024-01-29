@@ -56,7 +56,6 @@ public class AuthController {
     @DeleteMapping("/member")
     public ResponseEntity<ResultResponse> deleteMember(@RequestBody MemberDeleteDto memberDeleteDto, HttpServletRequest httpServletRequest){
         authService.deleteMember(memberDeleteDto);
-        httpServletRequest.getSession().invalidate();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.WITHDRAWAL_SUCCESS));
     }
 
