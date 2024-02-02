@@ -4,8 +4,8 @@ import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Category;
-import com.campfood.src.store.response.StoreResponse;
 import com.campfood.src.store.service.StoreService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@io.swagger.v3.oas.annotations.tags.Tag(name = "Store")
+@Tag(name = "Store")
 @Log4j2
 @RestController
 @RequestMapping("/store")
@@ -37,7 +37,7 @@ public class StoreController {
 
     @Operation(summary = "특정 태그 가게 조회")
     @GetMapping
-    public ResponseEntity<StoreResponse<PageResponse<StoreInquiryAllDTO>>> inquiryStoresByTag(@RequestParam Category category,
+    public ResponseEntity<ResultResponse> inquiryStoresByTag(@RequestParam Category category,
                                                                           @RequestParam String sort,
                                                                           @RequestParam Sort.Direction direction,
                                                                           @PageableDefault(page = 1) Pageable pageable) {
@@ -45,12 +45,12 @@ public class StoreController {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
 
         PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(category, pageable);
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "특정 학교 가게 조회")
     @GetMapping("/university")
-    public ResponseEntity<StoreResponse<PageResponse<StoreInquiryAllDTO>>> inquiryStoresByUniversity(@RequestParam String name,
+    public ResponseEntity<ResultResponse> inquiryStoresByUniversity(@RequestParam String name,
                                                                                              @RequestParam String sort,
                                                                                              @RequestParam Sort.Direction direction,
                                                                                              @PageableDefault(page = 1) Pageable pageable) {
@@ -58,28 +58,28 @@ public class StoreController {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
 
         PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByUniversity(name, pageable);
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_UNIVERSITY_SUCCESS, responseDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_UNIVERSITY_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "특정 가게 상세 조회")
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreResponse<StoreInquiryDetailDTO>> inquiryStoreDetail(@PathVariable Long storeId) {
+    public ResponseEntity<ResultResponse> inquiryStoreDetail(@PathVariable Long storeId) {
         StoreInquiryDetailDTO responseDTO = storeService.inquiryStoreDetail(storeId);
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORE_DETAIL_SUCCESS, responseDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORE_DETAIL_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "가게 검색")
     @GetMapping("/search")
-    public ResponseEntity<StoreResponse<PageResponse<StoreSearchByKeywordDTO>>> searchStoresByKeyword(@RequestParam String keyword,
+    public ResponseEntity<ResultResponse> searchStoresByKeyword(@RequestParam String keyword,
                                                                                                       @PageableDefault(page = 1) Pageable pageable) {
         PageResponse<StoreSearchByKeywordDTO> responseDTO = storeService.searchStoresByKeyword(keyword, pageable);
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.SEARCH_STORES_BY_KEYWORD_SUCCESS, responseDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_STORES_BY_KEYWORD_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "인기 가게 조회")
     @GetMapping("/popular")
-    public ResponseEntity<StoreResponse<List<StoreInquiryPopularDTO>>> inquiryStoresByRate(@RequestParam(required = false) String university) {
+    public ResponseEntity<ResultResponse> inquiryStoresByRate(@RequestParam(required = false) String university) {
         List<StoreInquiryPopularDTO> responseDTO = storeService.inquiryStoresByPopular(university);
-        return ResponseEntity.ok(StoreResponse.of(ResultCode.INQUIRY_STORES_BY_POPULAR, responseDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_POPULAR, responseDTO));
     }
 }
