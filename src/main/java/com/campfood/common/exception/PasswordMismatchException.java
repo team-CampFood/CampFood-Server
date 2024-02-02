@@ -1,7 +1,9 @@
 package com.campfood.common.exception;
 
 import com.campfood.common.error.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class PasswordMismatchException extends RuntimeException{
     private final ErrorCode errorCode;
 

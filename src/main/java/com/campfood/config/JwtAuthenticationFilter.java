@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = req.getHeader(AuthConstants.AUTH_HEADER_ACCESS);
             if (token != null) {
+                token = token.substring(7);
                 String loginId = TokenProvider.getLoginIdFromToken(token);
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         loginId,
@@ -57,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             res.getWriter().write(objectMapper.writeValueAsString(map));
             res.setStatus(401);
             return;
-        } catch (MalformedJwtException | SignatureException e){ //another exception
+        } catch (MalformedJwtException e){
             Map<String, String> map = new HashMap<>();
             res.setContentType("application/json");
             res.setCharacterEncoding("utf-8");

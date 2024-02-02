@@ -1,5 +1,6 @@
 package com.campfood.src.member.entity;
 
+import com.campfood.src.university.entity.University;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,17 +20,18 @@ public class Member extends Common implements Serializable {
     @Column(name = "member_id", nullable = false)
     private Long id;
 /*
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)
     private University university;
 */
-    @Column(name = "email", nullable = false)
+
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "loginId", nullable = false)
+    @Column(name = "loginId")
     private String loginId;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "nickname")
@@ -37,5 +39,21 @@ public class Member extends Common implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void withdrawal(){
+        //this.university = null;
+        this.email = null;
+        this.loginId = null;
+        this.password = null;
+        this.nickname = null;
+    }
 
 }

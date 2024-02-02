@@ -4,10 +4,10 @@ import com.campfood.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class MemberNotExistException extends RuntimeException{
+public class AlreadyExistMemberException extends RuntimeException{
     private final ErrorCode errorCode;
 
-    public MemberNotExistException(String message, ErrorCode errorCode){
+    public AlreadyExistMemberException(String message, ErrorCode errorCode){
         super(message);
         this.errorCode = errorCode;
     }

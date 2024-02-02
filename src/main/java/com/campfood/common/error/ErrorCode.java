@@ -14,6 +14,12 @@ public enum ErrorCode {
     ACCESS_TOKEN_EXPIRED(401, "E005", "엑세스토큰이 만료되었습니다."),
     ACCESS_TOKEN_MISMATCH(401, "E006", "엑세스토큰이 일치하지 않습니다."),
     PASSWORD_MISMATCH(400, "E007", "비밀번호가 일치하지 않습니다."),
+    ALREADY_EXIST_MEMBER(400, "E008", "이미 존재하는 유저입니다."),
+
+    //Mail
+    UNABLE_TO_SEND_EMAIL(401, "M001", "이메일 전송에 실패하였습니다."),
+    ALREADY_REGISTERED_EMAIL(401, "M002", "이미 등록된 이메일입니다."),
+    CREATE_AUTHCODE_FAILED(401,"M003", "이메일 인증코드 생성에 실패하였습니다."),
 
     // Store
     STORE_NOT_EXIST(500, "S001", "존재하지 않는 가게입니다."),

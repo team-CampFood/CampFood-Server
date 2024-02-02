@@ -3,9 +3,8 @@ package com.campfood.src.member.Auth.controller;
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
 import com.campfood.src.member.Auth.service.AuthService;
-import com.campfood.src.member.dto.LoginDto;
-import com.campfood.src.member.dto.MemberDeleteDto;
-import com.campfood.src.member.dto.SignUpDto;
+import com.campfood.src.member.response.FindIdResponse;
+import com.campfood.src.member.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -34,8 +33,7 @@ public class AuthController {
 
     @Operation(summary = "로그아웃")
     @PostMapping("/logout")
-    public ResponseEntity<ResultResponse> logout(HttpServletRequest request, HttpServletResponse response){
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.LOGOUT_SUCCESS));
+    public void logout(HttpServletRequest request, HttpServletResponse response){
     }
 
 
@@ -58,8 +56,22 @@ public class AuthController {
     @DeleteMapping("/member")
     public ResponseEntity<ResultResponse> deleteMember(@RequestBody MemberDeleteDto memberDeleteDto, HttpServletRequest httpServletRequest){
         authService.deleteMember(memberDeleteDto);
-        httpServletRequest.getSession().invalidate();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.WITHDRAWAL_SUCCESS));
     }
+
+    @Operation(summary = "아이디 찾기")
+    @PostMapping("/find-id")
+    public ResponseEntity<FindIdResponse> findLoginId(@RequestBody FindIdDto findIdDto){
+        String loginId = authService.findLoginId(findIdDto);
+        return ResponseEntity.ok(FindIdResponse.of(ResultCode.FIND_LOGINID_SUCCESS, loginId));
+    }
+
+    @Operation(summary = "비밀번호찾기(비로그인유저용)")
+    @PostMapping("/change-password")
+    public ResponseEntity<ResultResponse> changePassword(@RequestBody ChangePasswordForUnauthenticatedRequestDto changePasswordRequest){
+        authService.changePassword(changePasswordRequest);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PASSWORD_SUCCESS,"비밀번호 변경에 성공하였습니다."));
+    }
+
 
 }

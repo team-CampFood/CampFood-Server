@@ -57,7 +57,7 @@ public class TokenProvider {
     private static Map<String, Object> createClaims(Member member) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("loginId", member.getLoginId());
-//        claims.put("role", member.getRole());
+        claims.put("role", member.getRole());
         return claims;
     }
 

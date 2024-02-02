@@ -88,7 +88,7 @@ public class StoreService {
         Page<Store> stores = storeRepository.findByKeyword(keyword, pageable);
 
         return new PageResponse<>(
-                stores.map(storeMapper::toSearchByKeywordDTO).stream().toList(),
+                stores.map(storeMapper::toSearchByKeywordDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
@@ -99,7 +99,7 @@ public class StoreService {
             List<Store> stores = storeRepository.findTop10ByOrderByCampFoodRateDesc();
             return stores.stream()
                     .map(storeMapper::toInquiryByPopularDTO)
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
         University university = universityService.findUniversityByName(universityName);
@@ -108,6 +108,6 @@ public class StoreService {
 
         return stores.stream()
                 .map(storeMapper::toInquiryByPopularDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

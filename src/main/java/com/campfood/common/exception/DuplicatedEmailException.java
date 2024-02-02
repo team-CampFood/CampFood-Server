@@ -4,11 +4,11 @@ import com.campfood.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class ExampleException extends RuntimeException{
+public class DuplicatedEmailException extends RuntimeException{
 
     private final ErrorCode errorCode;
 
-    public ExampleException(String message, ErrorCode errorCode){
+    public DuplicatedEmailException(String message, ErrorCode errorCode){
         super(message);
         this.errorCode = errorCode;
     }

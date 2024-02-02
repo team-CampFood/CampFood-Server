@@ -5,23 +5,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
-@Schema(description = "로그인id 중복여부 응답 모델")
-public class LoginIdCheckResponse {
+@Schema(description = "아이디 찾기 응답 모델")
+public class FindIdResponse {
     @Schema(description = "Business 상태 코드")
     private final String code;
     @Schema(description = "응답 메세지")
     private final String message;
     @Schema(description = "응답 데이터")
-    private final boolean data;
+    private final String data;
 
 
-    public LoginIdCheckResponse(ResultCode resultCode, boolean data) {
+    public FindIdResponse(ResultCode resultCode, String data) {
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
         this.data = data;
     }
 
-    public static LoginIdCheckResponse of(ResultCode resultCode, boolean data) {
-        return new LoginIdCheckResponse(resultCode, data);
+    public static FindIdResponse of(ResultCode resultCode, String data) {
+        return new FindIdResponse(resultCode, data);
     }
 }
