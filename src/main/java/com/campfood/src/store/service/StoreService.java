@@ -2,6 +2,7 @@ package com.campfood.src.store.service;
 
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
+import com.campfood.common.service.EntityLoader;
 import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.*;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class StoreService {
+public class StoreService implements EntityLoader<Store, Long> {
 
     private final StoreRepository storeRepository;
     private final StoreHeartRepository storeHeartRepository;
@@ -42,8 +43,7 @@ public class StoreService {
         // 로그인 유저 -> 받아오는 로직 필요
         Member loginMember = authUtils.getMemberByAuthentication();
 
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
+        Store store = loadEntity(storeId);
 
         StoreHeart storeHeart = storeHeartRepository.findByMemberAndStore(loginMember, store)
                 .orElseGet(() -> {
@@ -78,8 +78,7 @@ public class StoreService {
     }
 
     public StoreInquiryDetailDTO inquiryStoreDetail(Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
+        Store store = loadEntity(storeId);
 
         return storeMapper.toInquiryDetailDTO(store);
     }
@@ -109,5 +108,11 @@ public class StoreService {
         return stores.stream()
                 .map(storeMapper::toInquiryByPopularDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Store loadEntity(Long storeId) {
+        return storeRepository.findById(storeId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
     }
 }
