@@ -30,7 +30,7 @@ public enum     ResultCode {
     CHANGE_NICKNAME_SUCCESS(200,"M002", "닉네임 변경에 성공하였습니다."),
     CHANGE_PROFILE_SUCCESS(200,"M003", "프로필사진 변경에 성공하였습니다."),
 
-    //s Store
+    // Store
     ACTIVE_STORE_HAERT_SUCCESS(200, "S001", "좋아요를 활성화에 성공하였습니다."),
     INACTIVE_STORE_HEART_SUCCESS(200, "S002", "좋아요를 비활성화에 성공하였습니다."),
     INQUIRY_STORES_BY_TAG_SUCCESS(200, "S003", "특정 태그 가게 목록 조회에 성공하였습니다."),
@@ -39,6 +39,12 @@ public enum     ResultCode {
     SEARCH_STORES_BY_KEYWORD_SUCCESS(200, "S006", "가게 검색에 성공하였습니다."),
     INQUIRY_STORES_BY_POPULAR(200, "S007", "인기 가게 조회에 성공하였습니다."),
 
+    // review
+    CREATE_REVIEW_SUCCESS(200, "R001", "리뷰 생성에 성공하였습니다."),
+    UPDATE_REVIEW_SUCCESS(200, "R002", "리뷰 수정에 성공하였습니다."),
+    DELETE_REVIEW_SUCCESS(200, "R003", "리뷰 삭제에 성공하였습니다."),
+    ACTIVE_REVIEW_HEART_SUCCESS(200, "R004", "리뷰 좋아요 활성화에 성공하였습니다."),
+    INACTIVE_REVIEW_HEART_SUCCESS(200, "R005", "리뷰 좋아요 비활성화에 성공하였습니다."),
 
     ;
     private final int status;
