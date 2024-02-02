@@ -71,6 +71,19 @@ public class ReviewService implements EntityLoader<Review, Long> {
         return review.getId();
     }
 
+    // 리뷰 삭제 함수
+    @Transactional
+    public Long deleteReview(final Long reviewId) {
+
+        // 리뷰 찾기
+        Review review = loadEntity(reviewId);
+
+        // 리뷰 삭제
+        review.delete();
+
+        return review.getId();
+    }
+
     // reviewImage 저장 함수
     private void saveReviewImages(Review review, List<String> imageUrls) {
         List<ReviewImage> reviewImages = imageUrls.stream()

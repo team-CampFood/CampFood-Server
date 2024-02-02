@@ -2,6 +2,7 @@ package com.campfood.src.review.controller;
 
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
+import com.campfood.src.member.dto.SignUpDto;
 import com.campfood.src.review.dto.request.ReviewCreateDTO;
 import com.campfood.src.review.dto.request.ReviewUpdateDTO;
 import com.campfood.src.review.service.ReviewService;
@@ -39,5 +40,12 @@ public class ReviewController {
                                                        @RequestPart(required = false) List<MultipartFile> reviewImages) {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_REVIEW_SUCCESS,
                 reviewService.updateReview(reviewId, request, reviewImages)));
+    }
+
+    @Operation(summary = "리뷰 삭제하기")
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ResultResponse> deleteReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_REVIEW_SUCCESS,
+                reviewService.deleteReview(reviewId)));
     }
 }
