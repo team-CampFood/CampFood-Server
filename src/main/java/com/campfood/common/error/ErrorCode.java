@@ -24,6 +24,9 @@ public enum ErrorCode {
     // Store
     STORE_NOT_EXIST(500, "S001", "존재하지 않는 가게입니다."),
 
+    // Review
+    REVIEW_NOT_EXIST(500, "R001", "존재하지 않는 리뷰입니다."),
+
     // University
     UNIVERSITY_NOT_EXIST(500, "U001", "존재하지 않는 대학교입니다."),
     ;

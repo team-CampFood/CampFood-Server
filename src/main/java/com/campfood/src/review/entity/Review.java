@@ -2,6 +2,7 @@ package com.campfood.src.review.entity;
 
 import com.campfood.common.entity.BaseEntity;
 import com.campfood.src.member.entity.Member;
+import com.campfood.src.review.dto.request.ReviewUpdateDTO;
 import com.campfood.src.store.entity.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,4 +50,11 @@ public class Review extends BaseEntity {
     @ColumnDefault("0")
     private Double clean_rate;
 
+    public void updateReview(ReviewUpdateDTO request) {
+        this.content = request.getContent();
+        this.taste_rate = request.getTasteRate();
+        this.cost_effectiveness_rate = request.getCostEffectivenessRate();
+        this.service_rate = request.getServiceRate();
+        this.clean_rate = request.getCleanRate();
+    }
 }

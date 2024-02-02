@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewCreateDTO {
+public class ReviewUpdateDTO {
     @NotBlank
     private String content;
     private Double tasteRate;
