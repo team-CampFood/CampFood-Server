@@ -2,7 +2,8 @@ package com.campfood.src.review.mapper;
 
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.review.dto.request.ReviewCreateDTO;
-import com.campfood.src.review.dto.response.ReviewInquiryAllDTO;
+import com.campfood.src.review.dto.response.ReviewInquiryByMemberDTO;
+import com.campfood.src.review.dto.response.ReviewInquiryByStoreDTO;
 import com.campfood.src.review.entity.Review;
 import com.campfood.src.review.entity.ReviewHeart;
 import com.campfood.src.review.entity.ReviewImage;
@@ -40,9 +41,9 @@ public class ReviewMapper {
                 .build();
     }
 
-    public ReviewInquiryAllDTO toReviewInquiryAllDTO(Review review, double averageRate,
-                                                     List<String> reviewImages, ReviewInquiryAllDTO.Writer writer) {
-        return ReviewInquiryAllDTO.builder()
+    public ReviewInquiryByStoreDTO toReviewInquiryByStoreDTO(Review review, double averageRate, List<String> reviewImages,
+                                                             ReviewInquiryByStoreDTO.WriterInfo writer) {
+        return ReviewInquiryByStoreDTO.builder()
                 .reviewId(review.getId())
                 .writer(writer)
                 .averageRate(averageRate)
@@ -52,13 +53,31 @@ public class ReviewMapper {
                 .build();
     }
 
-    public ReviewInquiryAllDTO.Writer toWriter(Member member, String profileImage, int reviewCnt) {
-        return ReviewInquiryAllDTO.Writer.builder()
+    public ReviewInquiryByStoreDTO.WriterInfo toWriterInfo(Member member, String profileImage, int reviewCnt) {
+        return ReviewInquiryByStoreDTO.WriterInfo.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
                 .profileImage(profileImage)
                 .reviewCnt(reviewCnt)
                 .averageRate(member.getAverageRate())
+                .build();
+    }
+
+    public ReviewInquiryByMemberDTO toReviewInquiryByMemberDTO(Review review, double averageRate, List<String> reviewImages,
+                                                               ReviewInquiryByMemberDTO.StoreInfo store) {
+        return ReviewInquiryByMemberDTO.builder()
+                .reviewId(review.getId())
+                .store(store)
+                .averageRate(averageRate)
+                .reviewImages(reviewImages)
+                .createdAt(review.getCreatedAt().toLocalDate())
+                .build();
+    }
+
+    public ReviewInquiryByMemberDTO.StoreInfo toStoreInfo(Store store) {
+        return ReviewInquiryByMemberDTO.StoreInfo.builder()
+                .storeId(store.getId())
+                .name(store.getName())
                 .build();
     }
 }

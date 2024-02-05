@@ -12,9 +12,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewInquiryAllDTO {
+public class ReviewInquiryByMemberDTO {
     private Long reviewId;
-    private Writer writer;
+    private StoreInfo store;
     private double averageRate;
     private String content;
     private List<String> reviewImages;
@@ -24,11 +24,8 @@ public class ReviewInquiryAllDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Writer {
-        private Long memberId;
-        private String nickname;
-        private String profileImage;
-        private int reviewCnt;
-        private double averageRate;
+    public static class StoreInfo {
+        private Long storeId;
+        private String name;
     }
 }

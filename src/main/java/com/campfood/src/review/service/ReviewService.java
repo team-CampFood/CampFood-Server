@@ -7,7 +7,8 @@ import com.campfood.src.member.MemberService;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.review.dto.request.ReviewCreateDTO;
 import com.campfood.src.review.dto.request.ReviewUpdateDTO;
-import com.campfood.src.review.dto.response.ReviewInquiryAllDTO;
+import com.campfood.src.review.dto.response.ReviewInquiryByMemberDTO;
+import com.campfood.src.review.dto.response.ReviewInquiryByStoreDTO;
 import com.campfood.src.review.dto.response.ReviewPageResponse;
 import com.campfood.src.review.entity.Review;
 import com.campfood.src.review.entity.ReviewHeart;
@@ -54,6 +55,8 @@ public class ReviewService implements EntityLoader<Review, Long> {
             saveReviewImages(savedReview, uploadReviewImages(reviewImages));
         }
 
+        // TODO: 멤버 averageRate 업데이트
+
         return savedReview.getId();
     }
 
@@ -83,6 +86,9 @@ public class ReviewService implements EntityLoader<Review, Long> {
             saveReviewImages(review, uploadReviewImages(reviewImages));
         }
 
+        // TODO: 멤버 averageRate 업데이트
+
+
         return review.getId();
     }
 
@@ -102,6 +108,8 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
         // 리뷰 삭제
         review.delete();
+
+        // TODO: 멤버 averageRate 업데이트
 
         return review.getId();
     }
@@ -125,21 +133,48 @@ public class ReviewService implements EntityLoader<Review, Long> {
     }
 
     // 특정 가게 리뷰 조회 함수
-    public ReviewPageResponse<ReviewInquiryAllDTO> inquiryReviewsByStore(Long storeId, Pageable pageable) {
+    public ReviewPageResponse<ReviewInquiryByStoreDTO> inquiryReviewsByStore(Long storeId, Pageable pageable) {
 
         Store store = storeService.loadEntity(storeId);
 
         Page<Review> reviewPage = reviewRepository.findAllByStore(store, pageable);
 
-        List<ReviewInquiryAllDTO> reviews = reviewPage.stream()
+        List<ReviewInquiryByStoreDTO> reviews = reviewPage.stream()
                 .map(review ->
-                        reviewMapper.toReviewInquiryAllDTO(
+                        reviewMapper.toReviewInquiryByStoreDTO(
                                 review,
                                 calculateAverageRate(review),
                                 reviewImageRepository.findAllByReview(review).stream()
                                         .map(ReviewImage::getUrl)
                                         .collect(Collectors.toList()),
                                 getWriterInfo(review)
+                        ))
+                .collect(Collectors.toList());
+
+        return new ReviewPageResponse<>(reviews, reviewPage.hasNext());
+    }
+
+    // 특정 멤버 리뷰 조회 함수
+    public ReviewPageResponse<ReviewInquiryByMemberDTO> inquiryReviewsByMember(Long memberId, Pageable pageable) {
+
+        // 로그인 유저
+        Member member = null;
+
+        // 타인 조회 시
+        if (memberId != null)
+            member = memberService.loadEntity(memberId);
+
+        Page<Review> reviewPage = reviewRepository.findAllByMember(member, pageable);
+
+        List<ReviewInquiryByMemberDTO> reviews = reviewPage.stream()
+                .map(review ->
+                        reviewMapper.toReviewInquiryByMemberDTO(
+                                review,
+                                calculateAverageRate(review),
+                                reviewImageRepository.findAllByReview(review).stream()
+                                        .map(ReviewImage::getUrl)
+                                        .collect(Collectors.toList()),
+                                reviewMapper.toStoreInfo(review.getStore())
                         ))
                 .collect(Collectors.toList());
 
@@ -171,15 +206,14 @@ public class ReviewService implements EntityLoader<Review, Long> {
     }
 
     // 리뷰 작성자 정보 조회 함수
-    private ReviewInquiryAllDTO.Writer getWriterInfo(Review review) {
+    private ReviewInquiryByStoreDTO.WriterInfo getWriterInfo(Review review) {
         Member member = review.getMember();
-        return ReviewInquiryAllDTO.Writer.builder()
-                .memberId(member.getId())
-                .nickname(member.getNickname())
-                .profileImage(memberService.findProfileImage(review.getMember()))
-                .reviewCnt(reviewRepository.countAllByMember(member))
-                .averageRate(member.getAverageRate())
-                .build();
+
+        return reviewMapper.toWriterInfo(
+                member,
+                memberService.findProfileImage(member),
+                reviewRepository.countAllByMember(member)
+        );
     }
 
     @Override

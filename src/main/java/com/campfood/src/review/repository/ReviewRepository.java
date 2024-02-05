@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByStore(Store store, Pageable pageable);
+    Page<Review> findAllByMember(Member member, Pageable pageable);
     int countAllByMember(Member member);
 }

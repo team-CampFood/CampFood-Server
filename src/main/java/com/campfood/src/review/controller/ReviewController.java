@@ -68,8 +68,6 @@ public class ReviewController {
     @Parameters(value = {
             @Parameter(name = "pageable", hidden = true),
             @Parameter(name = "page", required = true, description = "페이지 지정"),
-            @Parameter(name = "sort", required = true, description = "정렬 방식 지정"),
-            @Parameter(name = "direction", required = true, description = "정렬 방향 지정")
     })
     @GetMapping("/store/{storeId}")
     public ResponseEntity<ResultResponse> inquiryReviewsByStore(
@@ -77,5 +75,19 @@ public class ReviewController {
             @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)  {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_REVIEWS_BY_STORE_SUCCESS,
                 reviewService.inquiryReviewsByStore(storeId, pageable)));
+    }
+
+    @Operation(summary = "특정 멤버의 모든 리뷰 조회하기")
+    @Parameters(value = {
+            @Parameter(name = "pageable", hidden = true),
+            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "size", required = true, description = "한 페이지에 엔티티 개수"),
+    })
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<ResultResponse> inquiryReviewsByMember(
+            @PathVariable(required = false) Long memberId,
+            @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_REVIEWS_BY_MEMBER_SUCCESS,
+                reviewService.inquiryReviewsByMember(memberId, pageable)));
     }
 }
