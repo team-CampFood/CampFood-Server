@@ -26,6 +26,7 @@ public enum ErrorCode {
 
     // Review
     REVIEW_NOT_EXIST(500, "R001", "존재하지 않는 리뷰입니다."),
+    UNAUTHORIZED_REVIEW(500, "R002", "해당 리뷰에 권한이 없습니다."),
 
     // University
     UNIVERSITY_NOT_EXIST(500, "U001", "존재하지 않는 대학교입니다."),

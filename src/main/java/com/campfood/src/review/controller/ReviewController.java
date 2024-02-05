@@ -48,4 +48,12 @@ public class ReviewController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_REVIEW_SUCCESS,
                 reviewService.deleteReview(reviewId)));
     }
+
+    @Operation(summary = "리뷰 좋아요 활성화/비활성화")
+    @PostMapping("/{reviewId}/heart")
+    public ResponseEntity<ResultResponse> toggleReviewHeart(@PathVariable Long reviewId) {
+        if (reviewService.toggleReviewHeart(reviewId))
+            return ResponseEntity.ok(ResultResponse.of(ResultCode.ACTIVE_REVIEW_HEART_SUCCESS));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INACTIVE_REVIEW_HEART_SUCCESS));
+    }
 }
