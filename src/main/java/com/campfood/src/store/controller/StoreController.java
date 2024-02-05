@@ -5,6 +5,9 @@ import com.campfood.common.result.ResultResponse;
 import com.campfood.src.store.dto.*;
 import com.campfood.src.store.entity.Category;
 import com.campfood.src.store.service.StoreService;
+import io.lettuce.core.dynamic.annotation.Param;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,28 +40,30 @@ public class StoreController {
     }
 
     @Operation(summary = "특정 태그 가게 조회")
+    @Parameters(value = {
+            @Parameter(name = "pageable", hidden = true),
+            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "sort", required = true, description = "정렬 방식 지정"),
+            @Parameter(name = "direction", required = true, description = "정렬 방향 지정")
+    })
     @GetMapping
     public ResponseEntity<ResultResponse> inquiryStoresByTag(@RequestParam Category category,
-                                                                          @RequestParam String sort,
-                                                                          @RequestParam Sort.Direction direction,
-                                                                          @PageableDefault(page = 1) Pageable pageable) {
-        Sort sorting = Sort.by(direction, sort);
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
-
-        PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(category, pageable);
+                                                             @PageableDefault(page = 1) Pageable pageable) {
+        StorePageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(category, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "특정 학교 가게 조회")
+    @Parameters(value = {
+            @Parameter(name = "pageable", hidden = true),
+            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "sort", required = true, description = "정렬 방식 지정"),
+            @Parameter(name = "direction", required = true, description = "정렬 방향 지정")
+    })
     @GetMapping("/university")
     public ResponseEntity<ResultResponse> inquiryStoresByUniversity(@RequestParam String name,
-                                                                                             @RequestParam String sort,
-                                                                                             @RequestParam Sort.Direction direction,
-                                                                                             @PageableDefault(page = 1) Pageable pageable) {
-        Sort sorting = Sort.by(direction, sort);
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
-
-        PageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByUniversity(name, pageable);
+                                                                    @PageableDefault(page = 1) Pageable pageable) {
+        StorePageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByUniversity(name, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_UNIVERSITY_SUCCESS, responseDTO));
     }
 
@@ -69,10 +75,16 @@ public class StoreController {
     }
 
     @Operation(summary = "가게 검색")
+    @Parameters(value = {
+            @Parameter(name = "pageable", hidden = true),
+            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "sort", required = true, description = "정렬 방식 지정"),
+            @Parameter(name = "direction", required = true, description = "정렬 방향 지정")
+    })
     @GetMapping("/search")
     public ResponseEntity<ResultResponse> searchStoresByKeyword(@RequestParam String keyword,
-                                                                                                      @PageableDefault(page = 1) Pageable pageable) {
-        PageResponse<StoreSearchByKeywordDTO> responseDTO = storeService.searchStoresByKeyword(keyword, pageable);
+                                                                @PageableDefault(page = 1) Pageable pageable) {
+        StorePageResponse<StoreSearchByKeywordDTO> responseDTO = storeService.searchStoresByKeyword(keyword, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_STORES_BY_KEYWORD_SUCCESS, responseDTO));
     }
 

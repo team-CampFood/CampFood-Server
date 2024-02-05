@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResponse<T> {
+public class StorePageResponse<T> {
     private List<T> stores;
     private boolean hasNext;
 }

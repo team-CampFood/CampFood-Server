@@ -56,22 +56,22 @@ public class StoreService implements EntityLoader<Store, Long> {
         return storeHeart.isChecked();
     }
 
-    public PageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Category category, Pageable pageable) {
+    public StorePageResponse<StoreInquiryAllDTO> inquiryStoresByTag(Category category, Pageable pageable) {
 
         Page<Store> stores = storeCategoryRepository.findAllByTag(category, pageable);
 
-        return new PageResponse<>(
+        return new StorePageResponse<>(
                 stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
 
-    public PageResponse<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
+    public StorePageResponse<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
         University university = universityService.findUniversityByName(name);
 
         Page<Store> stores = storeRepository.findAllByUniversity(university, pageable);
 
-        return new PageResponse<>(
+        return new StorePageResponse<>(
                 stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
@@ -83,10 +83,10 @@ public class StoreService implements EntityLoader<Store, Long> {
         return storeMapper.toInquiryDetailDTO(store);
     }
 
-    public PageResponse<StoreSearchByKeywordDTO> searchStoresByKeyword(final String keyword, Pageable pageable) {
+    public StorePageResponse<StoreSearchByKeywordDTO> searchStoresByKeyword(final String keyword, Pageable pageable) {
         Page<Store> stores = storeRepository.findByKeyword(keyword, pageable);
 
-        return new PageResponse<>(
+        return new StorePageResponse<>(
                 stores.map(storeMapper::toSearchByKeywordDTO).stream().collect(Collectors.toList()),
                 stores.hasNext()
         );

@@ -45,6 +45,7 @@ public enum     ResultCode {
     DELETE_REVIEW_SUCCESS(200, "R003", "리뷰 삭제에 성공하였습니다."),
     ACTIVE_REVIEW_HEART_SUCCESS(200, "R004", "리뷰 좋아요 활성화에 성공하였습니다."),
     INACTIVE_REVIEW_HEART_SUCCESS(200, "R005", "리뷰 좋아요 비활성화에 성공하였습니다."),
+    INQUIRY_REVIEWS_BY_STORE_SUCCESS(200, "R006", "특정 가게의 리뷰 조회에 성공하였습니다."),
 
     ;
     private final int status;

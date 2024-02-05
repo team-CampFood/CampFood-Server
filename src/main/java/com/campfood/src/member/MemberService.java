@@ -87,4 +87,11 @@ public class MemberService {
             profileImageRepository.save(profileImage);
         }
     }
+
+    // 멤버 프로필 사진 조회
+    public String findProfileImage(Member member) {
+        Optional<ProfileImage> profileImage = profileImageRepository.findByMember(member);
+
+        return profileImage.map(ProfileImage::getUrl).orElse(null);
+    }
 }

@@ -2,6 +2,8 @@ package com.campfood.src.member.entity;
 
 import com.campfood.src.university.entity.University;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Member")
+@DynamicInsert
 public class Member extends Common implements Serializable {
 
     @Id
@@ -36,6 +39,9 @@ public class Member extends Common implements Serializable {
 
     @Column(name = "nickname")
     private String nickname;
+
+    @ColumnDefault("0")
+    private double averageRate;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
