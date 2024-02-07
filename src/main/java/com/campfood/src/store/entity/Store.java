@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,6 @@ public class Store extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn()
-    private University university;
 
     @Column(nullable = false)
     private String identificationId;
@@ -65,13 +62,16 @@ public class Store extends BaseEntity {
     private String storeNumber;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<StoreCategory> storeCategories;
+    @Builder.Default
+    private List<StoreCategory> storeCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<StoreOpenTime> storeOpenTimes;
+    @Builder.Default
+    private List<StoreOpenTime> storeOpenTimes = new ArrayList<>();
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<StoreUniversity> universities;
+    @Builder.Default
+    private List<StoreUniversity> universities = new ArrayList<>();
 
     public void updateStore(StoreUpdateDTO storeUpdateDTO) {
         this.name = storeUpdateDTO.getName();
@@ -90,5 +90,9 @@ public class Store extends BaseEntity {
 
     public void updateOpenTimes(List<StoreOpenTime> openTimes) {
         this.storeOpenTimes = openTimes;
+    }
+
+    public void addUniversity(StoreUniversity storeUniversity) {
+        this.universities.add(storeUniversity);
     }
 }

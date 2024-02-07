@@ -28,6 +28,4 @@ public class StoreUniversity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
     private University university;
-
-    private int distance;
 }

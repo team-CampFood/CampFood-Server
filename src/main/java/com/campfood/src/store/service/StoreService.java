@@ -41,36 +41,24 @@ public class StoreService implements EntityLoader<Store, Long> {
     private final AuthUtils authUtils;
 
     @Transactional
-    public void updateStore(StoreUpdateDTO request) {
+    public Long updateStore(StoreUpdateDTO request) {
         Store store = storeRepository.findByIdentificationId(request.getIdentificationId())
                 .orElseGet(() -> storeRepository.save(storeMapper.toStore(request)));
 
         store.updateStore(request);
         store.updateCategories(toStoreCategories(request.getCategories(), store));
         store.updateOpenTimes(toStoreOpenTimes(request.getOpeningTimes(), store));
-    }
 
-    private List<StoreCategory> toStoreCategories(List<Category> categories, Store store) {
+        // 가게 대학 정보 확인
+        University university = getUniversityByName(request.getUniversityName(), store);
+        // 해당 대학이 정보가 없다면 추가
+        if (university == null) {
+            store.addUniversity(storeMapper.toStoreUniversity(
+                    universityService.findUniversityByName(request.getUniversityName()), store)
+            );
+        }
 
-        // 기존 카테고리 삭제
-        List<StoreCategory> oldCategories = store.getStoreCategories();
-        oldCategories.forEach(StoreCategory::delete);
-
-        return categories.stream()
-                .map(category -> storeMapper.toStoreCategory(category, store))
-                .map(storeCategoryRepository::save)
-                .collect(Collectors.toList());
-    }
-
-    private List<StoreOpenTime> toStoreOpenTimes(List<StoreUpdateDTO.OpeningTime> openingTimes, Store store) {
-        // 기존 오픈 시간 삭제
-        List<StoreOpenTime> oldOpenTimes = store.getStoreOpenTimes();
-        oldOpenTimes.forEach(StoreOpenTime::delete);
-
-        return openingTimes.stream()
-                .map(openingTime -> storeMapper.toStoreOpenTime(openingTime, store))
-                .map(storeOpenTimeRepository::save)
-                .collect(Collectors.toList());
+        return store.getId();
     }
 
     @Transactional
@@ -143,6 +131,37 @@ public class StoreService implements EntityLoader<Store, Long> {
         return stores.stream()
                 .map(storeMapper::toInquiryByPopularDTO)
                 .collect(Collectors.toList());
+    }
+
+    private List<StoreCategory> toStoreCategories(List<Category> categories, Store store) {
+
+        // 기존 카테고리 삭제
+        List<StoreCategory> oldCategories = store.getStoreCategories();
+        oldCategories.forEach(StoreCategory::delete);
+
+        return categories.stream()
+                .map(category -> storeMapper.toStoreCategory(category, store))
+                .map(storeCategoryRepository::save)
+                .collect(Collectors.toList());
+    }
+
+    private List<StoreOpenTime> toStoreOpenTimes(List<StoreUpdateDTO.OpeningTime> openingTimes, Store store) {
+        // 기존 오픈 시간 삭제
+        List<StoreOpenTime> oldOpenTimes = store.getStoreOpenTimes();
+        oldOpenTimes.forEach(StoreOpenTime::delete);
+
+        return openingTimes.stream()
+                .map(openingTime -> storeMapper.toStoreOpenTime(openingTime, store))
+                .map(storeOpenTimeRepository::save)
+                .collect(Collectors.toList());
+    }
+
+    private University getUniversityByName(String universityName, Store store) {
+        return store.getUniversities().stream()
+                .map(StoreUniversity::getUniversity)
+                .filter(university -> university.getName().equals(universityName))
+                .findAny()
+                .orElse(null);
     }
 
     @Override

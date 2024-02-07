@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
-            "/v3/**", "/swagger-ui/**"
+            "/v3/**", "/swagger-ui/**", "/store/update"
     };
 
     private final RefreshTokenRepository refreshTokenRepository;

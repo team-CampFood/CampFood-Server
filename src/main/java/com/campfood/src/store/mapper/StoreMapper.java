@@ -7,6 +7,7 @@ import com.campfood.src.store.dto.response.StoreInquiryDetailDTO;
 import com.campfood.src.store.dto.response.StoreInquiryPopularDTO;
 import com.campfood.src.store.dto.response.StoreSearchByKeywordDTO;
 import com.campfood.src.store.entity.*;
+import com.campfood.src.university.entity.University;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,6 +41,13 @@ public class StoreMapper {
                 .store(store)
                 .day(openingTime.getDayOfWeek())
                 .content(openingTime.getContent())
+                .build();
+    }
+
+    public StoreUniversity toStoreUniversity(University university, Store store) {
+        return StoreUniversity.builder()
+                .store(store)
+                .university(university)
                 .build();
     }
 

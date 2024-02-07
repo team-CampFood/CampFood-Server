@@ -30,10 +30,10 @@ public class StoreController {
     private final StoreService storeService;
 
     @Operation(summary = "가게 업데이트")
-    @PostMapping
+    @PostMapping("/update")
     public ResponseEntity<ResultResponse> updateStore(@RequestBody StoreUpdateDTO request) {
-        storeService.updateStore(request);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_STORE_SUCCESS));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_STORE_SUCCESS,
+                storeService.updateStore(request)));
     }
 
     @Operation(summary = "가게 좋아요 활성화/비활성화")

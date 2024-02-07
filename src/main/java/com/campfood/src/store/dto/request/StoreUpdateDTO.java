@@ -25,6 +25,7 @@ public class StoreUpdateDTO {
     private String latitude;
     private String longitude;
     private List<OpeningTime> openingTimes;
+    private String universityName;
 
     @Getter
     @Builder
