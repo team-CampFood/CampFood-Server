@@ -45,27 +45,27 @@ public class StoreController {
     }
 
     @Operation(summary = "특정 태그 가게 조회")
-    @Parameters(value = {
-            @Parameter(name = "pageable", hidden = true),
-            @Parameter(name = "page", required = true, description = "페이지 지정")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
     })
     @GetMapping
     public ResponseEntity<ResultResponse> inquiryStoresByTag(
             @RequestParam Category category,
-            @PageableDefault(page = 1, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "store.name", direction = Sort.Direction.ASC)
+            @Parameter(hidden = true) Pageable pageable) {
         StorePageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByTag(category, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_TAG_SUCCESS, responseDTO));
     }
 
     @Operation(summary = "특정 학교 가게 조회")
     @Parameters(value = {
-            @Parameter(name = "pageable", hidden = true),
-            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
     })
     @GetMapping("/university")
     public ResponseEntity<ResultResponse> inquiryStoresByUniversity(
             @RequestParam String name,
-            @PageableDefault(page = 1, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "store.name", direction = Sort.Direction.ASC)
+            @Parameter(hidden = true) Pageable pageable) {
         StorePageResponse<StoreInquiryAllDTO> responseDTO = storeService.inquiryStoresByUniversity(name, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_UNIVERSITY_SUCCESS, responseDTO));
     }
@@ -79,21 +79,32 @@ public class StoreController {
 
     @Operation(summary = "가게 검색")
     @Parameters(value = {
-            @Parameter(name = "pageable", hidden = true),
-            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "page", description = "페이지 지정"),
     })
     @GetMapping("/search")
     public ResponseEntity<ResultResponse> searchStoresByKeyword(
             @RequestParam String keyword,
-            @PageableDefault(page = 1, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "name", direction = Sort.Direction.ASC)
+            @Parameter(hidden = true) Pageable pageable) {
         StorePageResponse<StoreSearchByKeywordDTO> responseDTO = storeService.searchStoresByKeyword(keyword, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_STORES_BY_KEYWORD_SUCCESS, responseDTO));
     }
 
-    @Operation(summary = "인기 가게 조회")
+    @Operation(summary = "Top 10 인기 가게 조회")
+    @Parameter(name = "university", description = "미입력 시 전체 대학교에서 인기 가게 조회")
     @GetMapping("/popular")
     public ResponseEntity<ResultResponse> inquiryStoresByRate(@RequestParam(required = false) String university) {
-        List<StoreInquiryPopularDTO> responseDTO = storeService.inquiryStoresByPopular(university);
+        List<StoreInquiryByPopularDTO> responseDTO = storeService.inquiryStoresByPopular(university);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_POPULAR, responseDTO));
+    }
+
+    @Operation(summary = "좋아요 가게 조회")
+    @Parameter(name = "page", description = "페이지 지정")
+    @GetMapping("/heart")
+    public ResponseEntity<ResultResponse> inquiryStoresByHeart(
+            @PageableDefault(sort = "store.name", direction = Sort.Direction.ASC)
+            @Parameter(hidden = true) Pageable pageable) {
+        StorePageResponse<StoreInquiryByHeartDTO> responseDTO = storeService.inquiryStoresByHeart(pageable);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_HEART, responseDTO));
     }
 }

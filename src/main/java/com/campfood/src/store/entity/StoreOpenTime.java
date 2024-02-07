@@ -25,6 +25,7 @@ public class StoreOpenTime extends BaseEntity {
     private Store store;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OpenDay day;
 
     private String content;

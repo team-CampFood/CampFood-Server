@@ -8,11 +8,13 @@ import com.campfood.src.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +30,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Operation(summary = "리뷰 생성하기")
-    @PostMapping("/store/{storeId}")
+    @PostMapping(value = "/store/{storeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResultResponse> createReview(@PathVariable Long storeId,
                                                        @RequestPart ReviewCreateDTO request,
                                                        @RequestPart(required = false) List<MultipartFile> reviewImages) {
@@ -37,7 +39,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정하기")
-    @PostMapping("/{reviewId}")
+    @PostMapping(value = "/{reviewId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResultResponse> updateReview(@PathVariable Long reviewId,
                                                        @RequestPart ReviewUpdateDTO request,
                                                        @RequestPart(required = false) List<MultipartFile> reviewImages) {
@@ -62,27 +64,26 @@ public class ReviewController {
 
     @Operation(summary = "특정 가게의 모든 리뷰 조회하기")
     @Parameters(value = {
-            @Parameter(name = "pageable", hidden = true),
-            @Parameter(name = "page", required = true, description = "페이지 지정"),
+            @Parameter(name = "page", description = "페이지 지정")
     })
     @GetMapping("/store/{storeId}")
     public ResponseEntity<ResultResponse> inquiryReviewsByStore(
             @PathVariable Long storeId,
-            @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)  {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+            @Parameter(hidden = true) Pageable pageable)  {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_REVIEWS_BY_STORE_SUCCESS,
                 reviewService.inquiryReviewsByStore(storeId, pageable)));
     }
 
     @Operation(summary = "특정 멤버의 모든 리뷰 조회하기")
     @Parameters(value = {
-            @Parameter(name = "pageable", hidden = true),
-            @Parameter(name = "page", required = true, description = "페이지 지정"),
-            @Parameter(name = "size", required = true, description = "한 페이지에 엔티티 개수"),
-    })
-    @GetMapping("/member/{memberId}")
+            @Parameter(name = "page", description = "페이지 지정"),
+            @Parameter(name = "memberId", in = ParameterIn.PATH, description = "미입력 시 본인 리뷰 조회")
+    })    @GetMapping(value = {"/member", "/member/{memberId}"})
     public ResponseEntity<ResultResponse> inquiryReviewsByMember(
             @PathVariable(required = false) Long memberId,
-            @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+            @Parameter(hidden = true) Pageable pageable) {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_REVIEWS_BY_MEMBER_SUCCESS,
                 reviewService.inquiryReviewsByMember(memberId, pageable)));
     }

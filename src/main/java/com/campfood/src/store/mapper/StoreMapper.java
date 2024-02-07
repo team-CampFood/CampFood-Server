@@ -2,10 +2,7 @@ package com.campfood.src.store.mapper;
 
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.store.dto.request.StoreUpdateDTO;
-import com.campfood.src.store.dto.response.StoreInquiryAllDTO;
-import com.campfood.src.store.dto.response.StoreInquiryDetailDTO;
-import com.campfood.src.store.dto.response.StoreInquiryPopularDTO;
-import com.campfood.src.store.dto.response.StoreSearchByKeywordDTO;
+import com.campfood.src.store.dto.response.*;
 import com.campfood.src.store.entity.*;
 import com.campfood.src.university.entity.University;
 import org.springframework.stereotype.Component;
@@ -107,11 +104,25 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreInquiryPopularDTO toInquiryByPopularDTO(Store store) {
-        return StoreInquiryPopularDTO.builder()
+    public StoreInquiryByPopularDTO toInquiryByPopularDTO(Store store) {
+        return StoreInquiryByPopularDTO.builder()
                 .storeId(store.getId())
+                .storeName(store.getName())
                 .storeImage(store.getImage())
                 .storeCategory(toTags(store.getStoreCategories()).get(0))
+                .build();
+    }
+
+    public StoreInquiryByHeartDTO toInquiryByHeartDTO(Store store) {
+        return StoreInquiryByHeartDTO.builder()
+                .storeId(store.getId())
+                .storeName(store.getName())
+                .storeImage(store.getImage())
+                .naverRate(store.getNaverRate())
+                .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
+                .naverBlogReviewCnt(store.getNaverBlogReviewCnt())
+                .campFoodRate(store.getCampFoodRate())
+                .campFoodReviewCnt(store.getCampFoodReviewCnt())
                 .build();
     }
 

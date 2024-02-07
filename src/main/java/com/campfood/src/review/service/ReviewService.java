@@ -63,7 +63,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
         double reviewAverageRate = calculateAverageRate(savedReview);
 
         // 멤버 averageRate 업데이트
-        memberService.updateAverageRate(member, 0, reviewAverageRate, reviewRepository.countAllByMember(member));
+        memberService.updateAverageRate(member, 0, reviewAverageRate, reviewRepository.countAllByMember(member), 1);
 
         return savedReview.getId();
     }
@@ -78,7 +78,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
         // 리뷰 찾기
         Review review = loadEntity(reviewId);
 
-        if (review.getMember().getId().equals(member.getId())) {
+        if (!review.getMember().getId().equals(member.getId())) {
             throw new RestApiException(ErrorCode.UNAUTHORIZED_REVIEW);
         }
 
@@ -99,7 +99,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
         // 멤버 averageRate 업데이트
         double newAverageRate = calculateAverageRate(review);
         if (oldAverageRate != newAverageRate)
-            memberService.updateAverageRate(member, oldAverageRate, newAverageRate, reviewRepository.countAllByMember(member));
+            memberService.updateAverageRate(member, oldAverageRate, newAverageRate, reviewRepository.countAllByMember(member), 0);
 
         return review.getId();
     }
@@ -114,12 +114,12 @@ public class ReviewService implements EntityLoader<Review, Long> {
         // 리뷰 찾기
         Review review = loadEntity(reviewId);
 
-        if (review.getMember().getId().equals(member.getId())) {
+        if (!review.getMember().getId().equals(member.getId())) {
             throw new RestApiException(ErrorCode.UNAUTHORIZED_REVIEW);
         }
 
         double oldAverageRate = calculateAverageRate(review);
-        memberService.updateAverageRate(member, oldAverageRate, 0, reviewRepository.countAllByMember(member));
+        memberService.updateAverageRate(member, oldAverageRate, 0, reviewRepository.countAllByMember(member), 0);
 
         // 리뷰 삭제
         review.delete();

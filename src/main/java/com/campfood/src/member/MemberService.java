@@ -97,10 +97,10 @@ public class MemberService implements EntityLoader<Member, Long> {
     }
 
     // averageRate 업데이트 함수
-    public void updateAverageRate(Member member, double oldReviewAverageRate, double reviewAverageRate, int reviewCnt) {
+    public void updateAverageRate(Member member, double oldReviewAverageRate, double reviewAverageRate, int reviewCnt, int type) {
         double memberAverageRate = member.getAverageRate();
 
-        memberAverageRate = memberAverageRate * (reviewCnt - 1) - oldReviewAverageRate + reviewAverageRate / reviewCnt;
+        memberAverageRate = (memberAverageRate * (reviewCnt - type) - oldReviewAverageRate + reviewAverageRate) / reviewCnt;
 
         String formatted = String.format("%.1f", memberAverageRate);
         member.updateAverageRate(Double.parseDouble(formatted));

@@ -39,6 +39,7 @@ public enum     ResultCode {
     SEARCH_STORES_BY_KEYWORD_SUCCESS(200, "S006", "가게 검색에 성공하였습니다."),
     INQUIRY_STORES_BY_POPULAR(200, "S007", "인기 가게 조회에 성공하였습니다."),
     UPDATE_STORE_SUCCESS(200, "S008", "가게 업데이트에 성공하였습니다."),
+    INQUIRY_STORES_BY_HEART(200, "S009", "좋아요한 가게 목록 조회에 성공하였습니다."),
 
     // review
     CREATE_REVIEW_SUCCESS(200, "R001", "리뷰 생성에 성공하였습니다."),

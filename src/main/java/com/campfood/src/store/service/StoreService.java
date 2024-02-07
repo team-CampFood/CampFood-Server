@@ -9,10 +9,7 @@ import com.campfood.src.store.dto.request.StoreUpdateDTO;
 import com.campfood.src.store.dto.response.*;
 import com.campfood.src.store.entity.*;
 import com.campfood.src.store.mapper.StoreMapper;
-import com.campfood.src.store.repository.StoreCategoryRepository;
-import com.campfood.src.store.repository.StoreHeartRepository;
-import com.campfood.src.store.repository.StoreOpenTimeRepository;
-import com.campfood.src.store.repository.StoreRepository;
+import com.campfood.src.store.repository.*;
 import com.campfood.src.university.entity.University;
 import com.campfood.src.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +30,7 @@ public class StoreService implements EntityLoader<Store, Long> {
     private final StoreHeartRepository storeHeartRepository;
     private final StoreCategoryRepository storeCategoryRepository;
     private final StoreOpenTimeRepository storeOpenTimeRepository;
+    private final StoreUniversityRepository storeUniversityRepository;
 
     private final UniversityService universityService;
 
@@ -63,7 +60,6 @@ public class StoreService implements EntityLoader<Store, Long> {
 
     @Transactional
     public boolean toggleStoreHeart(Long storeId) {
-        // 로그인 유저 -> 받아오는 로직 필요
         Member loginMember = authUtils.getMemberByAuthentication();
 
         Store store = loadEntity(storeId);
@@ -92,7 +88,8 @@ public class StoreService implements EntityLoader<Store, Long> {
     public StorePageResponse<StoreInquiryAllDTO> inquiryStoresByUniversity(String name, Pageable pageable) {
         University university = universityService.findUniversityByName(name);
 
-        Page<Store> stores = storeRepository.findAllByUniversity(university, pageable);
+        Page<Store> stores = storeUniversityRepository.findAllByUniversity(university, pageable)
+                .map(StoreUniversity::getStore);
 
         return new StorePageResponse<>(
                 stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
@@ -115,7 +112,7 @@ public class StoreService implements EntityLoader<Store, Long> {
         );
     }
 
-    public List<StoreInquiryPopularDTO> inquiryStoresByPopular(String universityName) {
+    public List<StoreInquiryByPopularDTO> inquiryStoresByPopular(String universityName) {
         // 대학교 명을 안 보냈을 경우 전체에서 조회
         if (universityName == null) {
             List<Store> stores = storeRepository.findTop10ByOrderByCampFoodRateDesc();
@@ -133,11 +130,23 @@ public class StoreService implements EntityLoader<Store, Long> {
                 .collect(Collectors.toList());
     }
 
+    public StorePageResponse<StoreInquiryByHeartDTO> inquiryStoresByHeart(Pageable pageable) {
+        Member loginMember = authUtils.getMemberByAuthentication();
+
+        Page<Store> stores = storeHeartRepository.findAllByMemberAndIsCheckedIsTrue(loginMember, pageable)
+                .map(StoreHeart::getStore);
+
+        return new StorePageResponse<>(
+                stores.map(storeMapper::toInquiryByHeartDTO).stream().collect(Collectors.toList()),
+                stores.hasNext()
+        );
+    }
+
     private List<StoreCategory> toStoreCategories(List<Category> categories, Store store) {
 
         // 기존 카테고리 삭제
         List<StoreCategory> oldCategories = store.getStoreCategories();
-        oldCategories.forEach(StoreCategory::delete);
+        storeCategoryRepository.deleteAll(oldCategories);
 
         return categories.stream()
                 .map(category -> storeMapper.toStoreCategory(category, store))
@@ -148,7 +157,7 @@ public class StoreService implements EntityLoader<Store, Long> {
     private List<StoreOpenTime> toStoreOpenTimes(List<StoreUpdateDTO.OpeningTime> openingTimes, Store store) {
         // 기존 오픈 시간 삭제
         List<StoreOpenTime> oldOpenTimes = store.getStoreOpenTimes();
-        oldOpenTimes.forEach(StoreOpenTime::delete);
+        storeOpenTimeRepository.deleteAll(oldOpenTimes);
 
         return openingTimes.stream()
                 .map(openingTime -> storeMapper.toStoreOpenTime(openingTime, store))

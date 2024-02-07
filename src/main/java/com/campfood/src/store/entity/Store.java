@@ -38,8 +38,8 @@ public class Store extends BaseEntity {
 
     private String description;
 
-    @ColumnDefault("0.0")
-    private Double naverRate;
+    @ColumnDefault("0")
+    private double naverRate;
 
     @ColumnDefault("0")
     private int naverVisitedReviewCnt;
@@ -47,8 +47,8 @@ public class Store extends BaseEntity {
     @ColumnDefault("0")
     private int naverBlogReviewCnt;
 
-    @ColumnDefault("0.0")
-    private Double campFoodRate;
+    @ColumnDefault("0")
+    private double campFoodRate;
 
     @ColumnDefault("0")
     private int campFoodReviewCnt;
