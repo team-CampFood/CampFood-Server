@@ -98,7 +98,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
         // 멤버 averageRate 업데이트
         double newAverageRate = calculateAverageRate(review);
-        if (oldAverageRate != newAverageRate) 
+        if (oldAverageRate != newAverageRate)
             memberService.updateAverageRate(member, oldAverageRate, newAverageRate, reviewRepository.countAllByMember(member));
 
         return review.getId();
@@ -109,7 +109,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
     public Long deleteReview(final Long reviewId) {
 
         // 로그인 유저
-        Member member = null;
+        Member member = authUtils.getMemberByAuthentication();
 
         // 리뷰 찾기
         Review review = loadEntity(reviewId);
@@ -118,11 +118,12 @@ public class ReviewService implements EntityLoader<Review, Long> {
             throw new RestApiException(ErrorCode.UNAUTHORIZED_REVIEW);
         }
 
+        double oldAverageRate = calculateAverageRate(review);
+        memberService.updateAverageRate(member, oldAverageRate, 0, reviewRepository.countAllByMember(member));
+
         // 리뷰 삭제
         review.delete();
-
-        // TODO: 멤버 averageRate 업데이트
-
+        
         return review.getId();
     }
 
