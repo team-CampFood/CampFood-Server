@@ -2,7 +2,6 @@ package com.campfood.src.review.controller;
 
 import com.campfood.common.result.ResultCode;
 import com.campfood.common.result.ResultResponse;
-import com.campfood.src.member.dto.SignUpDto;
 import com.campfood.src.review.dto.request.ReviewCreateDTO;
 import com.campfood.src.review.dto.request.ReviewUpdateDTO;
 import com.campfood.src.review.service.ReviewService;
@@ -11,17 +10,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Parent;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "Review")
 @RestController

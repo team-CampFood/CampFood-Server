@@ -1,8 +1,8 @@
 package com.campfood.src.store.repository;
 
+import com.campfood.src.store.entity.Category;
 import com.campfood.src.store.entity.Store;
 import com.campfood.src.store.entity.StoreCategory;
-import com.campfood.src.store.entity.Category;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

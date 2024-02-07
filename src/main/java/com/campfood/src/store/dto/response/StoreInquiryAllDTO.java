@@ -1,6 +1,5 @@
-package com.campfood.src.store.dto;
+package com.campfood.src.store.dto.response;
 
-import com.campfood.src.store.entity.OpenDay;
 import com.campfood.src.store.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +9,10 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class StoreInquiryDetailDTO {
+public class StoreInquiryAllDTO {
     private Long storeId;
     private String storeName;
     private List<Category> storeCategories;
@@ -23,14 +22,4 @@ public class StoreInquiryDetailDTO {
     private int naverBlogReviewCnt;
     private double campFoodRate;
     private int camFoodReviewCnt;
-    private String storeAddress;
-    private List<OpenTimeInfo> openTimeInfos;
-    private String storeNumber;
-
-    @Getter
-    @Builder
-    public static class OpenTimeInfo {
-        private OpenDay day;
-        private String content;
-    }
 }

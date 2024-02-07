@@ -5,14 +5,14 @@ import com.campfood.common.exception.RestApiException;
 import com.campfood.common.service.EntityLoader;
 import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.store.dto.*;
-import com.campfood.src.store.entity.Store;
-import com.campfood.src.store.entity.StoreHeart;
-import com.campfood.src.store.entity.Category;
+import com.campfood.src.store.dto.request.StoreUpdateDTO;
+import com.campfood.src.store.dto.response.*;
+import com.campfood.src.store.entity.*;
 import com.campfood.src.store.mapper.StoreMapper;
-import com.campfood.src.store.repository.StoreHeartRepository;
-import com.campfood.src.store.repository.StoreRepository;
 import com.campfood.src.store.repository.StoreCategoryRepository;
+import com.campfood.src.store.repository.StoreHeartRepository;
+import com.campfood.src.store.repository.StoreOpenTimeRepository;
+import com.campfood.src.store.repository.StoreRepository;
 import com.campfood.src.university.entity.University;
 import com.campfood.src.university.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,11 +33,45 @@ public class StoreService implements EntityLoader<Store, Long> {
     private final StoreRepository storeRepository;
     private final StoreHeartRepository storeHeartRepository;
     private final StoreCategoryRepository storeCategoryRepository;
+    private final StoreOpenTimeRepository storeOpenTimeRepository;
 
     private final UniversityService universityService;
 
     private final StoreMapper storeMapper;
     private final AuthUtils authUtils;
+
+    @Transactional
+    public void updateStore(StoreUpdateDTO request) {
+        Store store = storeRepository.findByIdentificationId(request.getIdentificationId())
+                .orElseGet(() -> storeRepository.save(storeMapper.toStore(request)));
+
+        store.updateStore(request);
+        store.updateCategories(toStoreCategories(request.getCategories(), store));
+        store.updateOpenTimes(toStoreOpenTimes(request.getOpeningTimes(), store));
+    }
+
+    private List<StoreCategory> toStoreCategories(List<Category> categories, Store store) {
+
+        // 기존 카테고리 삭제
+        List<StoreCategory> oldCategories = store.getStoreCategories();
+        oldCategories.forEach(StoreCategory::delete);
+
+        return categories.stream()
+                .map(category -> storeMapper.toStoreCategory(category, store))
+                .map(storeCategoryRepository::save)
+                .collect(Collectors.toList());
+    }
+
+    private List<StoreOpenTime> toStoreOpenTimes(List<StoreUpdateDTO.OpeningTime> openingTimes, Store store) {
+        // 기존 오픈 시간 삭제
+        List<StoreOpenTime> oldOpenTimes = store.getStoreOpenTimes();
+        oldOpenTimes.forEach(StoreOpenTime::delete);
+
+        return openingTimes.stream()
+                .map(openingTime -> storeMapper.toStoreOpenTime(openingTime, store))
+                .map(storeOpenTimeRepository::save)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public boolean toggleStoreHeart(Long storeId) {

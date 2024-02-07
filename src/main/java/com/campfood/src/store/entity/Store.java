@@ -1,6 +1,7 @@
 package com.campfood.src.store.entity;
 
 import com.campfood.common.entity.BaseEntity;
+import com.campfood.src.store.dto.request.StoreUpdateDTO;
 import com.campfood.src.university.entity.University;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,8 +59,8 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    private String directionX;
-    private String directionY;
+    private String latitude;
+    private String longitude;
 
     private String storeNumber;
 
@@ -71,4 +72,23 @@ public class Store extends BaseEntity {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<StoreUniversity> universities;
+
+    public void updateStore(StoreUpdateDTO storeUpdateDTO) {
+        this.name = storeUpdateDTO.getName();
+        this.naverRate = storeUpdateDTO.getRate();
+        this.naverVisitedReviewCnt = storeUpdateDTO.getVisitedReview();
+        this.naverBlogReviewCnt = storeUpdateDTO.getBlogReview();
+        this.address = storeUpdateDTO.getAddress();
+        this.storeNumber = storeUpdateDTO.getStoreNumber();
+        this.latitude = storeUpdateDTO.getLatitude();
+        this.longitude = storeUpdateDTO.getLongitude();
+    }
+
+    public void updateCategories(List<StoreCategory> categories) {
+        this.storeCategories = categories;
+    }
+
+    public void updateOpenTimes(List<StoreOpenTime> openTimes) {
+        this.storeOpenTimes = openTimes;
+    }
 }
