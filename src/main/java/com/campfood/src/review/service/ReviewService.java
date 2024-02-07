@@ -123,7 +123,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
         // 리뷰 삭제
         review.delete();
-        
+
         return review.getId();
     }
 
@@ -132,7 +132,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
     public boolean toggleReviewHeart(final Long reviewId) {
 
         // 로그인 유저
-        Member member = null;
+        Member member = authUtils.getMemberByAuthentication();
 
         // 리뷰 찾기
         Review review = loadEntity(reviewId);
@@ -171,7 +171,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
     public ReviewPageResponse<ReviewInquiryByMemberDTO> inquiryReviewsByMember(Long memberId, Pageable pageable) {
 
         // 로그인 유저
-        Member member = null;
+        Member member = authUtils.getMemberByAuthentication();
 
         // 타인 조회 시
         if (memberId != null)
