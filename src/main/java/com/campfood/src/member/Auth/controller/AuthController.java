@@ -67,7 +67,7 @@ public class AuthController {
     }
 
     @Operation(summary = "비밀번호찾기(비로그인유저용)")
-    @PostMapping("/change-password")
+    @PatchMapping("/password")
     public ResponseEntity<ResultResponse> changePassword(@RequestBody ChangePasswordForUnauthenticatedRequestDto changePasswordRequest){
         authService.changePassword(changePasswordRequest);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PASSWORD_SUCCESS,"비밀번호 변경에 성공하였습니다."));

@@ -20,17 +20,17 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "닉네임 중복 확인")
-    @PostMapping("/nickname/{nickname}")
-    public ResponseEntity<ResultResponse> nicknameDuplicationCheck(@PathVariable(value = "nickname") String nickname){
-        boolean result = memberService.nicknameDuplicationCheck(nickname);
+    @PostMapping("/nickname")
+    public ResponseEntity<ResultResponse> nicknameDuplicationCheck(@RequestBody CheckDuplicateNicknameDto checkDuplicateNicknameDto){
+        boolean result = memberService.nicknameDuplicationCheck(checkDuplicateNicknameDto);
         ResultCode resultCode = (result ? ResultCode.INVALID_NICKNAME : ResultCode.VALID_NICKNAME);
         return ResponseEntity.ok(ResultResponse.of(resultCode, !result));
     }
 
     @Operation(summary = "로그인 id 중복 확인")
-    @PostMapping("/login-id/{loginId}")
-    public ResponseEntity<ResultResponse> loginIdDuplicationCheck(@PathVariable(value = "loginId") String loginId){
-        boolean result = memberService.loginIdDuplicationCheck(loginId);
+    @PostMapping("/loginid")
+    public ResponseEntity<ResultResponse> loginIdDuplicationCheck(@RequestBody CheckDuplicateLoginidDto checkDuplicateLoginidDto){
+        boolean result = memberService.loginIdDuplicationCheck(checkDuplicateLoginidDto);
         ResultCode resultCode = (result ? ResultCode.INVALID_LOGIN_ID : ResultCode.VALID_LOGIN_ID);
         return ResponseEntity.ok(ResultResponse.of(resultCode, !result));
     }
@@ -43,21 +43,21 @@ public class MemberController {
     }
 
     @Operation(summary = "닉네임 수정하기")
-    @PutMapping("/nickname")
+    @PatchMapping("/nickname")
     public ResponseEntity<ResultResponse> changeNickname(@RequestBody ChangeNicknameRequestDto memberInfoRequestDto){
         memberService.changeNickname(memberInfoRequestDto);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_NICKNAME_SUCCESS));
     }
 
     @Operation(summary = "비밀번호 변경(로그인유저용)")
-    @PutMapping("/password")
+    @PatchMapping("/password")
     public ResponseEntity<ResultResponse> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto){
         memberService.changePassword(changePasswordRequestDto);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PASSWORD_SUCCESS));
     }
 
     @Operation(summary = "프로필사진 등록 및 수정")
-    @PutMapping("/profile")
+    @PatchMapping("/profile")
     public ResponseEntity<ResultResponse> changeProfile(@RequestBody ChangeProfileRequestDto changeProfileRequestDto){
         memberService.changeProfile(changeProfileRequestDto);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PROFILE_SUCCESS));

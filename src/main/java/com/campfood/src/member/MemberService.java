@@ -4,8 +4,7 @@ import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.DuplicatedLoginIdException;
 import com.campfood.common.exception.PasswordMismatchException;
 import com.campfood.src.member.Auth.AuthUtils;
-import com.campfood.src.member.dto.ChangePasswordRequestDto;
-import com.campfood.src.member.dto.ChangeProfileRequestDto;
+import com.campfood.src.member.dto.*;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.entity.ProfileImage;
 import com.campfood.src.member.repository.MemberRepository;
@@ -13,8 +12,6 @@ import com.campfood.src.member.repository.ProfileImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.campfood.src.member.dto.MemberInfoDto;
-import com.campfood.src.member.dto.ChangeNicknameRequestDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -30,14 +27,14 @@ public class MemberService {
 
     //닉네임 중복 확인
     @Transactional
-    public boolean nicknameDuplicationCheck(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+    public boolean nicknameDuplicationCheck(CheckDuplicateNicknameDto checkDuplicateNicknameDto) {
+        return memberRepository.existsByNickname(checkDuplicateNicknameDto.getNickname());
     }
 
     //로그인id 중복 확인
     @Transactional
-    public boolean loginIdDuplicationCheck(String loginId) {
-        return memberRepository.existsByLoginId(loginId);
+    public boolean loginIdDuplicationCheck(CheckDuplicateLoginidDto checkDuplicateLoginidDto) {
+        return memberRepository.existsByLoginId(checkDuplicateLoginidDto.getLoginid());
     }
 
     //나의 정보 불러오기
@@ -49,8 +46,8 @@ public class MemberService {
                         nickname(member.getNickname()).
                         loginId(member.getLoginId()).
                         email(member.getEmail()).
-                       // university(member.getUniversity().getName()).
-                        myReviewCount(1).build(); // review repository 생성이후 작성
+                       //university(member.getUniversity().getName()).
+                        myReviewCount(0).build(); // review repository 생성이후 작성
         return memberInfoDto;
     }
 
