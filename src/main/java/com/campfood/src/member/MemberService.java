@@ -96,6 +96,16 @@ public class MemberService implements EntityLoader<Member, Long> {
         return profileImage.map(ProfileImage::getUrl).orElse(null);
     }
 
+    // averageRate 업데이트 함수
+    public void updateAverageRate(Member member, double reviewAverageRate, int reviewCnt) {
+        double memberAverageRate = member.getAverageRate();
+
+        memberAverageRate = memberAverageRate * (reviewCnt - 1) + reviewAverageRate / reviewCnt;
+
+        String formatted = String.format("%.1f", memberAverageRate);
+        member.updateAverageRate(Double.parseDouble(formatted));
+    }
+
     @Override
     public Member loadEntity(Long id) {
         return memberRepository.findById(id)

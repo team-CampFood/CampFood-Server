@@ -3,6 +3,7 @@ package com.campfood.src.review.service;
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.common.service.EntityLoader;
+import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.MemberService;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.review.dto.request.ReviewCreateDTO;
@@ -40,22 +41,29 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
     private final StoreService storeService;
     private final MemberService memberService;
+    private final AuthUtils authUtils;
 
     // 리뷰 생성 함수
     @Transactional
     public Long createReview(final Long storeId, ReviewCreateDTO request, List<MultipartFile> reviewImages) {
 
+        // 로그인 중인 유저
+        Member member = authUtils.getMemberByAuthentication();
+
         // 가게 찾기
         Store store = storeService.loadEntity(storeId);
 
-        Review savedReview = reviewRepository.save(reviewMapper.toReview(store, request));
+        Review savedReview = reviewRepository.save(reviewMapper.toReview(member, store, request));
 
         // 리뷰 이미지 저장
         if (reviewImages != null) {
             saveReviewImages(savedReview, uploadReviewImages(reviewImages));
         }
 
-        // TODO: 멤버 averageRate 업데이트
+        double reviewAverageRate = calculateAverageRate(savedReview);
+
+        // 멤버 averageRate 업데이트
+        memberService.updateAverageRate(member, reviewAverageRate, reviewRepository.countAllByMember(member));
 
         return savedReview.getId();
     }

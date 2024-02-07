@@ -62,4 +62,7 @@ public class Member extends Common implements Serializable {
         this.nickname = null;
     }
 
+    public void updateAverageRate(double averageRate) {
+        this.averageRate = averageRate;
+    }
 }

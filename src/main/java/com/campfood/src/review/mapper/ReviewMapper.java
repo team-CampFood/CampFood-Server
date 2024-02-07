@@ -15,8 +15,9 @@ import java.util.List;
 @Component
 public class ReviewMapper {
 
-    public Review toReview(Store store, ReviewCreateDTO request) {
+    public Review toReview(Member member, Store store, ReviewCreateDTO request) {
         return Review.builder()
+                .member(member)
                 .store(store)
                 .content(request.getContent())
                 .taste_rate(request.getTasteRate())
