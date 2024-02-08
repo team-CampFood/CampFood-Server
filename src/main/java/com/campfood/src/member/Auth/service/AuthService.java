@@ -19,6 +19,8 @@ import com.campfood.src.member.redis.RefreshToken;
 import com.campfood.src.member.redis.RefreshTokenRepository;
 import com.campfood.src.member.repository.MemberRepository;
 import com.campfood.src.member.repository.ProfileImageRepository;
+import com.campfood.src.university.entity.University;
+import com.campfood.src.university.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +37,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthUtils authUtils;
     private final ProfileImageRepository profileImageRepository;
+    private final UniversityRepository universityRepository;
 
     //회원가입
     @Transactional
@@ -43,7 +46,7 @@ public class AuthService {
             throw new AlreadyExistMemberException("이미 존재하는 유저입니다.", ErrorCode.ALREADY_EXIST_MEMBER);
         }
 
-        //대학교명을 통하여 대학교관련 로직필요
+
 
         final Member member= Member.builder()
                 .email(signUpDto.getEmail())
@@ -51,6 +54,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickname(signUpDto.getNickname())
                 .role(MemberRole.ROLE_USER)
+                .university(universityRepository.findByName(signUpDto.getUniversityName()).get())
                 .build();
         memberRepository.save(member);
     }
@@ -79,11 +83,11 @@ public class AuthService {
         Member member = authUtils.getMemberByAuthentication();
         if(passwordEncoder.matches(memberDeleteDto.getPassword(), member.getPassword())){
 
-            member.withdrawal();
             Optional<ProfileImage> profileImage = profileImageRepository.findByMember(member);
             if(profileImage.isPresent()){
                 profileImageRepository.deleteById(profileImage.get().getId());
             }
+            member.withdrawal();
             SecurityContextHolder.getContext().setAuthentication(null);
             SecurityContextHolder.clearContext();
         }
