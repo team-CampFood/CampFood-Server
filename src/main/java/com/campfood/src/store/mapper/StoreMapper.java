@@ -79,6 +79,7 @@ public class StoreMapper {
 
         return StoreInquiryDetailDTO.builder()
                 .storeId(store.getId())
+                .identificationId(store.getIdentificationId())
                 .storeName(store.getName())
                 .storeCategories(toTags(store.getStoreCategories()))
                 .storeImage(store.getImage())
