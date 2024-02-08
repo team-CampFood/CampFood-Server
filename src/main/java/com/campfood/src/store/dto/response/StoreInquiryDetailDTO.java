@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 public class StoreInquiryDetailDTO {
     private Long storeId;
+    private String identificationId;
     private String storeName;
     private List<Category> storeCategories;
     private String storeImage;

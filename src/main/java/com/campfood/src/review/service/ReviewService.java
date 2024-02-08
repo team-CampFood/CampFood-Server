@@ -3,6 +3,7 @@ package com.campfood.src.review.service;
 import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.common.service.EntityLoader;
+import com.campfood.common.service.S3Service;
 import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.MemberService;
 import com.campfood.src.member.entity.Member;
@@ -41,6 +42,7 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
     private final StoreService storeService;
     private final MemberService memberService;
+    private final S3Service s3Service;
     private final AuthUtils authUtils;
 
     // 리뷰 생성 함수
@@ -89,7 +91,11 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
         // 기존 리뷰 이미지 삭제
         List<ReviewImage> oldReviewImages = reviewImageRepository.findAllByReview(review);
-        //TODO: S3 사진 삭제 구현 후 삭제 개발
+        oldReviewImages.forEach(ReviewImage::delete);
+        oldReviewImages.stream()
+                .map(ReviewImage::getUrl)
+                .forEach(s3Service::deleteFile);
+
 
         // 새로운 리뷰 이미지 저장
         if (reviewImages != null) {
@@ -123,6 +129,13 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
         // 리뷰 삭제
         review.delete();
+
+        // 기존 리뷰 이미지 삭제
+        List<ReviewImage> oldReviewImages = reviewImageRepository.findAllByReview(review);
+        oldReviewImages.forEach(ReviewImage::delete);
+        oldReviewImages.stream()
+                .map(ReviewImage::getUrl)
+                .forEach(s3Service::deleteFile);
 
         return review.getId();
     }
@@ -204,8 +217,9 @@ public class ReviewService implements EntityLoader<Review, Long> {
 
     // s3 업로드 함수
     private List<String> uploadReviewImages(List<MultipartFile> reviewImages) {
-        //TODO: s3 사진 업로드 구현 후 개발
-        return List.of();
+        return reviewImages.stream()
+                .map(reviewimage -> s3Service.uploadFile("review", reviewimage))
+                .collect(Collectors.toList());
     }
 
     // 리뷰 평균 평점 계산 함수

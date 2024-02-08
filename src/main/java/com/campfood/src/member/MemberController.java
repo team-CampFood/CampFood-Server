@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name="Member")
 @RequiredArgsConstructor
@@ -57,9 +59,9 @@ public class MemberController {
     }
 
     @Operation(summary = "프로필사진 등록 및 수정")
-    @PatchMapping("/profile")
-    public ResponseEntity<ResultResponse> changeProfile(@RequestBody ChangeProfileRequestDto changeProfileRequestDto){
-        memberService.changeProfile(changeProfileRequestDto);
+    @PatchMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResultResponse> changeProfile(@RequestPart MultipartFile profileImage){
+        memberService.changeProfile(profileImage);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CHANGE_PROFILE_SUCCESS));
     }
 

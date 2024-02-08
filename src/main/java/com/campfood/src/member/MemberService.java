@@ -4,6 +4,7 @@ import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.PasswordMismatchException;
 import com.campfood.common.exception.RestApiException;
 import com.campfood.common.service.EntityLoader;
+import com.campfood.common.service.S3Service;
 import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.dto.*;
 import com.campfood.src.member.entity.Member;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -27,6 +29,7 @@ public class MemberService implements EntityLoader<Member, Long> {
     private final PasswordEncoder passwordEncoder;
     private final ProfileImageRepository profileImageRepository;
     private final ReviewRepository reviewRepository;
+    private final S3Service s3Service;
 
     //닉네임 중복 확인
     @Transactional
@@ -73,19 +76,23 @@ public class MemberService implements EntityLoader<Member, Long> {
 
     //프로필사진 변경 및 수정
     @Transactional
-    public void changeProfile(ChangeProfileRequestDto changeProfileRequestDto) {
+    public void changeProfile(MultipartFile profileImage) {
         Member member = authUtils.getMemberByAuthentication();
         Optional<ProfileImage> curProfileImage = profileImageRepository.findByMember(member);
+
         if(curProfileImage.isPresent()) {
-            curProfileImage.get().updateUrl(changeProfileRequestDto.getUrl());
+            // 기존 이미지 삭제
+            ProfileImage oldProfileImage = curProfileImage.get();
+            oldProfileImage.delete();
+            s3Service.deleteFile(oldProfileImage.getUrl());
         }
-        else {
-            ProfileImage profileImage = ProfileImage.builder()
-                    .member(member)
-                    .url(changeProfileRequestDto.getUrl())
-                    .build();
-            profileImageRepository.save(profileImage);
-        }
+
+        profileImageRepository.save(
+                ProfileImage.builder()
+                        .member(member)
+                        .url(s3Service.uploadFile("member", profileImage))
+                        .build()
+        );
     }
 
     // 멤버 프로필 사진 조회

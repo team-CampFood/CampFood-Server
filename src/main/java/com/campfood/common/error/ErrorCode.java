@@ -30,6 +30,9 @@ public enum ErrorCode {
 
     // University
     UNIVERSITY_NOT_EXIST(500, "U001", "존재하지 않는 대학교입니다."),
+
+    // S3
+    FAILED_UPLOAD_S3(500, "S3001", "S3 파일 업로드에 실패하였습니다."),
     ;
 
     final private int status;
