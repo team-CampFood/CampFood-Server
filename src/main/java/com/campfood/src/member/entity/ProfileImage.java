@@ -25,10 +25,5 @@ public class ProfileImage extends BaseEntity {
 
     @Column(name = "url", nullable = false)
     private String url;
-
-    public void updateUrl(String url){
-        this.url = url;
-    }
-
 }
 
