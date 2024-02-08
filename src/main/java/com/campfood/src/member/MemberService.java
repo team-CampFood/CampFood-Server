@@ -10,6 +10,7 @@ import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.entity.ProfileImage;
 import com.campfood.src.member.repository.MemberRepository;
 import com.campfood.src.member.repository.ProfileImageRepository;
+import com.campfood.src.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class MemberService implements EntityLoader<Member, Long> {
     private final AuthUtils authUtils;
     private final PasswordEncoder passwordEncoder;
     private final ProfileImageRepository profileImageRepository;
+    private final ReviewRepository reviewRepository;
 
     //닉네임 중복 확인
     @Transactional
@@ -47,8 +49,8 @@ public class MemberService implements EntityLoader<Member, Long> {
                         nickname(member.getNickname()).
                         loginId(member.getLoginId()).
                         email(member.getEmail()).
-                       //university(member.getUniversity().getName()).
-                        myReviewCount(0).build(); // review repository 생성이후 작성
+                        university(member.getUniversity().getName()).
+                        myReviewCount(reviewRepository.countAllByMember(member)).build();
         return memberInfoDto;
     }
 
