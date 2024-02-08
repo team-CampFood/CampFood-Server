@@ -44,11 +44,16 @@ public class Member extends Common implements Serializable {
     @Column(name = "nickname")
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ColumnDefault("0")
     private double averageRate;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+
 
     public void updatePassword(String password){
         this.password = password;
