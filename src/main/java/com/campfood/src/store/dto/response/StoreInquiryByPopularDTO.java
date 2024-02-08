@@ -1,4 +1,4 @@
-package com.campfood.src.store.dto;
+package com.campfood.src.store.dto.response;
 
 import com.campfood.src.store.entity.Category;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreInquiryPopularDTO {
+public class StoreInquiryByPopularDTO {
     private Long storeId;
+    private String storeName;
     private String storeImage;
     private Category storeCategory;
 }

@@ -1,6 +1,7 @@
 package com.campfood.src.store.repository;
 
 import com.campfood.src.store.entity.Store;
+import com.campfood.src.store.entity.StoreUniversity;
 import com.campfood.src.university.entity.University;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -16,8 +17,8 @@ import java.util.Optional;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Optional<Store> findById(Long id);
+    Optional<Store> findByIdentificationId(String identificationId);
     List<Store> findTop10ByOrderByCampFoodRateDesc();
-    Page<Store> findAllByUniversity(University university, Pageable pageable);
 
     @Query("SELECT s FROM Store s WHERE s.name LIKE %:keyword%")
     Page<Store> findByKeyword(String keyword, Pageable pageable);

@@ -2,11 +2,15 @@ package com.campfood.src.review.entity;
 
 import com.campfood.common.entity.BaseEntity;
 import com.campfood.src.member.entity.Member;
+import com.campfood.src.review.dto.request.ReviewUpdateDTO;
 import com.campfood.src.store.entity.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -16,34 +20,41 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Review")
+@Where(clause = "is_deleted = false")
+@DynamicInsert
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id", nullable = false)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
+    @JoinColumn
     private Store store;
 
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     private String content;
 
-    @Column(name = "taste_rate", nullable = false)
+    @ColumnDefault("0")
     private Double taste_rate;
 
-    @Column(name = "cost_effectiveness_rate", nullable = false)
+    @ColumnDefault("0")
     private Double cost_effectiveness_rate;
 
-    @Column(name = "service_rate", nullable = false)
+    @ColumnDefault("0")
     private Double service_rate;
 
-    @Column(name = "clean_rate", nullable = false)
+    @ColumnDefault("0")
     private Double clean_rate;
 
+    public void updateReview(ReviewUpdateDTO request) {
+        this.content = request.getContent();
+        this.taste_rate = request.getTasteRate();
+        this.cost_effectiveness_rate = request.getCostEffectivenessRate();
+        this.service_rate = request.getServiceRate();
+        this.clean_rate = request.getCleanRate();
+    }
 }

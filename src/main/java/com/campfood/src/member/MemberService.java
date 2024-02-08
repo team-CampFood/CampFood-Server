@@ -1,8 +1,9 @@
 package com.campfood.src.member;
 
 import com.campfood.common.error.ErrorCode;
-import com.campfood.common.exception.DuplicatedLoginIdException;
 import com.campfood.common.exception.PasswordMismatchException;
+import com.campfood.common.exception.RestApiException;
+import com.campfood.common.service.EntityLoader;
 import com.campfood.src.member.Auth.AuthUtils;
 import com.campfood.src.member.dto.ChangePasswordRequestDto;
 import com.campfood.src.member.dto.ChangeProfileRequestDto;
@@ -22,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements EntityLoader<Member, Long> {
     private final MemberRepository memberRepository;
     private final AuthUtils authUtils;
     private final PasswordEncoder passwordEncoder;
@@ -86,5 +87,28 @@ public class MemberService {
                     .build();
             profileImageRepository.save(profileImage);
         }
+    }
+
+    // 멤버 프로필 사진 조회
+    public String findProfileImage(Member member) {
+        Optional<ProfileImage> profileImage = profileImageRepository.findByMember(member);
+
+        return profileImage.map(ProfileImage::getUrl).orElse(null);
+    }
+
+    // averageRate 업데이트 함수
+    public void updateAverageRate(Member member, double oldReviewAverageRate, double reviewAverageRate, int reviewCnt, int type) {
+        double memberAverageRate = member.getAverageRate();
+
+        memberAverageRate = (memberAverageRate * (reviewCnt - type) - oldReviewAverageRate + reviewAverageRate) / reviewCnt;
+
+        String formatted = String.format("%.1f", memberAverageRate);
+        member.updateAverageRate(Double.parseDouble(formatted));
+    }
+
+    @Override
+    public Member loadEntity(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new RestApiException(ErrorCode.MEMBER_NOT_EXIST));
     }
 }

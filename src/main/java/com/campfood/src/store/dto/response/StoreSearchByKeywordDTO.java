@@ -1,4 +1,4 @@
-package com.campfood.src.store.dto;
+package com.campfood.src.store.dto.response;
 
 import com.campfood.src.store.entity.Category;
 import lombok.AllArgsConstructor;

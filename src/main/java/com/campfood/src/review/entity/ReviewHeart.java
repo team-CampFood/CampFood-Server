@@ -1,6 +1,7 @@
 package com.campfood.src.review.entity;
 
 import com.campfood.common.entity.BaseEntity;
+import com.campfood.src.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +16,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "is_deleted = false")
-public class ReviewImage extends BaseEntity {
+public class ReviewHeart extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_image_id", nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", nullable = false)
-    private Review review;
+    private boolean isChecked;
 
-    @Column(name = "url" , nullable = false)
-    private String url;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Review review;
+    public void toggleStoreHeart() {
+        this.isChecked = !this.isChecked;
+    }
+
 }

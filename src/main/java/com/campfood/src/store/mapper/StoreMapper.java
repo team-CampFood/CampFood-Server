@@ -1,11 +1,10 @@
 package com.campfood.src.store.mapper;
 
 import com.campfood.src.member.entity.Member;
-import com.campfood.src.store.dto.StoreInquiryAllDTO;
-import com.campfood.src.store.dto.StoreInquiryDetailDTO;
-import com.campfood.src.store.dto.StoreInquiryPopularDTO;
-import com.campfood.src.store.dto.StoreSearchByKeywordDTO;
+import com.campfood.src.store.dto.request.StoreUpdateDTO;
+import com.campfood.src.store.dto.response.*;
 import com.campfood.src.store.entity.*;
+import com.campfood.src.university.entity.University;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,8 +12,40 @@ import java.util.stream.Collectors;
 
 @Component
 public class StoreMapper {
-    public Store toStore() {
-        return Store.builder().build();
+    public Store toStore(StoreUpdateDTO request) {
+        return Store.builder()
+                .identificationId(request.getIdentificationId())
+                .name(request.getName())
+                .naverRate(request.getRate())
+                .naverVisitedReviewCnt(request.getVisitedReview())
+                .naverBlogReviewCnt(request.getBlogReview())
+                .address(request.getAddress())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .build();
+
+    }
+
+    public StoreCategory toStoreCategory(Category category, Store store) {
+        return StoreCategory.builder()
+                .store(store)
+                .category(category)
+                .build();
+    }
+
+    public StoreOpenTime toStoreOpenTime(StoreUpdateDTO.OpeningTime openingTime, Store store) {
+        return StoreOpenTime.builder()
+                .store(store)
+                .day(openingTime.getDayOfWeek())
+                .content(openingTime.getContent())
+                .build();
+    }
+
+    public StoreUniversity toStoreUniversity(University university, Store store) {
+        return StoreUniversity.builder()
+                .store(store)
+                .university(university)
+                .build();
     }
 
     public StoreHeart toStoreHeart(Member member, Store store) {
@@ -73,11 +104,25 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreInquiryPopularDTO toInquiryByPopularDTO(Store store) {
-        return StoreInquiryPopularDTO.builder()
+    public StoreInquiryByPopularDTO toInquiryByPopularDTO(Store store) {
+        return StoreInquiryByPopularDTO.builder()
                 .storeId(store.getId())
+                .storeName(store.getName())
                 .storeImage(store.getImage())
                 .storeCategory(toTags(store.getStoreCategories()).get(0))
+                .build();
+    }
+
+    public StoreInquiryByHeartDTO toInquiryByHeartDTO(Store store) {
+        return StoreInquiryByHeartDTO.builder()
+                .storeId(store.getId())
+                .storeName(store.getName())
+                .storeImage(store.getImage())
+                .naverRate(store.getNaverRate())
+                .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
+                .naverBlogReviewCnt(store.getNaverBlogReviewCnt())
+                .campFoodRate(store.getCampFoodRate())
+                .campFoodReviewCnt(store.getCampFoodReviewCnt())
                 .build();
     }
 

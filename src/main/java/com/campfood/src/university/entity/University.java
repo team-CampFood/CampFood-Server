@@ -21,6 +21,6 @@ public class University extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    private String directionX;
-    private String directionY;
+    private String latitude;
+    private String longitude;
 }

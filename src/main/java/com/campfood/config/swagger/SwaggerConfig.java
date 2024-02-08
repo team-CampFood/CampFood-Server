@@ -1,4 +1,4 @@
-package com.campfood.config;
+package com.campfood.config.swagger;
 
 import com.campfood.src.member.Auth.AuthConstants;
 import io.swagger.v3.oas.models.Components;
