@@ -20,4 +20,6 @@ public class SignUpDto {
     private String nickname;
     @NotBlank(message = "대학교명은 필수입력값입니다.")
     private String universityName;
+
+    private String gender;
 }

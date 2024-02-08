@@ -12,6 +12,7 @@ import com.campfood.src.member.dto.ChangePasswordForUnauthenticatedRequestDto;
 import com.campfood.src.member.dto.FindIdDto;
 import com.campfood.src.member.dto.MemberDeleteDto;
 import com.campfood.src.member.dto.SignUpDto;
+import com.campfood.src.member.entity.Gender;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.entity.MemberRole;
 import com.campfood.src.member.entity.ProfileImage;
@@ -46,8 +47,6 @@ public class AuthService {
             throw new AlreadyExistMemberException("이미 존재하는 유저입니다.", ErrorCode.ALREADY_EXIST_MEMBER);
         }
 
-
-
         final Member member= Member.builder()
                 .email(signUpDto.getEmail())
                 .loginId(signUpDto.getLoginId())
@@ -55,6 +54,7 @@ public class AuthService {
                 .nickname(signUpDto.getNickname())
                 .role(MemberRole.ROLE_USER)
                 .university(universityRepository.findByName(signUpDto.getUniversityName()).get())
+                .gender(signUpDto.getGender().equals("MALE")? Gender.MALE: Gender.FEMALE)
                 .build();
         memberRepository.save(member);
     }
