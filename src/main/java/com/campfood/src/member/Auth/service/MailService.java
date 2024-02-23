@@ -4,6 +4,7 @@ import com.campfood.common.error.ErrorCode;
 import com.campfood.common.exception.CreateAuthCodeException;
 import com.campfood.common.exception.DuplicatedEmailException;
 import com.campfood.common.exception.EmailException;
+import com.campfood.common.exception.MemberNotExistException;
 import com.campfood.src.member.entity.Member;
 import com.campfood.src.member.redis.EmailAuthCode;
 import com.campfood.src.member.redis.EmailAuthCodeRepository;
@@ -53,13 +54,23 @@ public class MailService {
     }
 
 
-    //이메일로 인증번호 전송
+    //이메일로 인증번호 전송(회원가입용)
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
         String title = "CampFood 이메일 인증 번호";
         String authCode = this.createCode();
         sendEmail(toEmail, title, authCode);
         EmailAuthCode emailAuthCode = new EmailAuthCode("AuthCode " + toEmail, authCode);
+        emailAuthCodeRepository.save(emailAuthCode);
+    }
+
+    //이메일로 인증번호 전송(비밀번호 찾기용)
+    public void sendCodeToEmailForMember(String toEmail) {
+        this.checkMemberEmail(toEmail);
+        String title = "CampFood 이메일 인증 번호";
+        String authCode = this.createCode();
+        sendEmail(toEmail, title, authCode);
+        EmailAuthCode emailAuthCode = new EmailAuthCode("AuthCodeFor " + toEmail, authCode);
         emailAuthCodeRepository.save(emailAuthCode);
     }
 
@@ -77,10 +88,16 @@ public class MailService {
         }
     }
 
-    //인증번호 검증
+    //인증번호 검증(회원가입)
     public boolean verifiedCode(String email, String authCode) {
         this.checkDuplicatedEmail(email);
         Optional<EmailAuthCode> emailAuthCode = emailAuthCodeRepository.findById("AuthCode " + email);
+        return authCode.equals(emailAuthCode.get().getEmailAuthCode());
+    }
+
+    //인증번호 검증(비밀번호변경)
+    public boolean verifiedMember(String email, String authCode) {
+        Optional<EmailAuthCode> emailAuthCode = emailAuthCodeRepository.findById("AuthCodeFor " + email);
         return authCode.equals(emailAuthCode.get().getEmailAuthCode());
     }
 
@@ -90,4 +107,14 @@ public class MailService {
             throw new DuplicatedEmailException("이미 등록된 이메일입니다.",ErrorCode.ALREADY_REGISTERED_EMAIL);
         }
     }
+
+    private void checkMemberEmail(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if (!member.isPresent()) {
+            throw new MemberNotExistException("유저가 존재하지 않습니다.",ErrorCode.MEMBER_NOT_EXIST);
+        }
+    }
+
+
+
 }
