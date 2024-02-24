@@ -50,7 +50,7 @@ public class TokenProvider {
 
     private static Date setExpireTime() {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, 2);
+        c.add(Calendar.MINUTE, 5);
         return c.getTime();
     }
 

@@ -27,14 +27,21 @@ public class MailController {
 
     private final MailService mailService;
 
-    @Operation(summary = "이메일 인증번호 전송")
+    @Operation(summary = "이메일 인증번호 전송(회원가입용)")
     @PostMapping()
     public ResponseEntity<ResultResponse> sendCodeToEmail(@RequestParam("email") @Valid String email){
         mailService.sendCodeToEmail(email);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.EMAIL_SEND_SUCCESS));
     }
 
-    @Operation(summary = "인증번호 검증")
+    @Operation(summary = "이메일 인증번호 전송(비밀번호 변경용)")
+    @PostMapping("/password")
+    public ResponseEntity<ResultResponse> sendCodeToEmailForMember(@RequestParam("email") @Valid String email){
+        mailService.sendCodeToEmailForMember(email);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.EMAIL_SEND_SUCCESS));
+    }
+
+    @Operation(summary = "인증번호 검증(회원가입용)")
     @PostMapping("/verify")
     public ResponseEntity<ResultResponse> verifiedCode(@RequestParam("email") @Valid String email,
                                                        @RequestParam("code") String authCode){
@@ -42,4 +49,14 @@ public class MailController {
         ResultCode resultCode = (result ? EMAIL_VERIFIED_SUCCESS : EMAIL_VERIFIED_FAILED);
         return ResponseEntity.ok(ResultResponse.of(resultCode,result));
     }
+
+    @Operation(summary = "인증번호 검증(비밀번호 변경용)")
+    @PostMapping("/verify/password")
+    public ResponseEntity<ResultResponse> verifiedMember(@RequestParam("email") @Valid String email,
+                                                         @RequestParam("code") String authCode){
+        boolean result = mailService.verifiedMember(email, authCode);
+        ResultCode resultCode = (result ? EMAIL_VERIFIED_SUCCESS : EMAIL_VERIFIED_FAILED);
+        return ResponseEntity.ok(ResultResponse.of(resultCode,result));
+    }
+
 }
