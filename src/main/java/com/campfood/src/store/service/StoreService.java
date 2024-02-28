@@ -123,7 +123,7 @@ public class StoreService implements EntityLoader<Store, Long> {
 
         University university = universityService.findUniversityByName(universityName);
 
-        List<Store> stores = storeRepository.findTop10ByUniversityAndOrderByCampFoodRateDesc(university, PageRequest.of(0, 10));
+        List<Store> stores = storeUniversityRepository.findTop10ByUniversity(university, PageRequest.of(0, 10));
 
         return stores.stream()
                 .map(storeMapper::toInquiryByPopularDTO)

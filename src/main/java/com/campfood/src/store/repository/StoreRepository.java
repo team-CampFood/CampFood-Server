@@ -22,7 +22,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Query("SELECT s FROM Store s WHERE s.name LIKE %:keyword%")
     Page<Store> findByKeyword(String keyword, Pageable pageable);
-
-    @Query("SELECT s FROM Store s WHERE :university MEMBER OF s.universities ORDER BY s.campFoodRate DESC")
-    List<Store> findTop10ByUniversityAndOrderByCampFoodRateDesc(@Param("university") University university, Pageable pageable);
 }
