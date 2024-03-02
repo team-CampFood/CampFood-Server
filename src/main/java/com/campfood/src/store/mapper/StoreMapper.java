@@ -26,21 +26,6 @@ public class StoreMapper {
 
     }
 
-    public StoreCategory toStoreCategory(Category category, Store store) {
-        return StoreCategory.builder()
-                .store(store)
-                .category(category)
-                .build();
-    }
-
-    public StoreOpenTime toStoreOpenTime(StoreUpdateDTO.OpeningTime openingTime, Store store) {
-        return StoreOpenTime.builder()
-                .store(store)
-                .day(openingTime.getDayOfWeek())
-                .content(openingTime.getContent())
-                .build();
-    }
-
     public StoreUniversity toStoreUniversity(University university, Store store) {
         return StoreUniversity.builder()
                 .store(store)
@@ -56,12 +41,12 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreInquiryAllDTO toInquiryByTagDTO(Store store) {
+    public StoreInquiryAllDTO toInquiryByTagDTO(Store store, List<StoreCategory> storeCategories) {
 
         return StoreInquiryAllDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
-                .storeCategories(toTags(store.getStoreCategories()))
+                .storeCategories(toTags(storeCategories))
                 .storeImage(store.getImage())
                 .naverRate(store.getNaverRate())
                 .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
@@ -71,9 +56,9 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreInquiryDetailDTO toInquiryDetailDTO(Store store) {
+    public StoreInquiryDetailDTO toInquiryDetailDTO(Store store, List<StoreCategory> storeCategories, List<StoreOpenTime> storeOpenTimes) {
 
-        List<StoreInquiryDetailDTO.OpenTimeInfo> openTimeInfos = store.getStoreOpenTimes().stream()
+        List<StoreInquiryDetailDTO.OpenTimeInfo> openTimeInfos = storeOpenTimes.stream()
                 .map(this::toOpenTimeInfo)
                 .collect(Collectors.toList());
 
@@ -81,7 +66,7 @@ public class StoreMapper {
                 .storeId(store.getId())
                 .identificationId(store.getIdentificationId())
                 .storeName(store.getName())
-                .storeCategories(toTags(store.getStoreCategories()))
+                .storeCategories(toTags(storeCategories))
                 .storeImage(store.getImage())
                 .naverRate(store.getNaverRate())
                 .naverVisitedReviewCnt(store.getNaverVisitedReviewCnt())
@@ -94,23 +79,23 @@ public class StoreMapper {
                 .build();
     }
 
-    public StoreSearchByKeywordDTO toSearchByKeywordDTO(Store store) {
+    public StoreSearchByKeywordDTO toSearchByKeywordDTO(Store store, List<StoreCategory> storeCategories) {
         return StoreSearchByKeywordDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
-                .storeCategories(toTags(store.getStoreCategories()))
+                .storeCategories(toTags(storeCategories))
                 .storeImage(store.getImage())
                 .campFoodRate(store.getCampFoodRate())
                 .campFoodReviewCnt(store.getCampFoodReviewCnt())
                 .build();
     }
 
-    public StoreInquiryByPopularDTO toInquiryByPopularDTO(Store store) {
+    public StoreInquiryByPopularDTO toInquiryByPopularDTO(Store store, List<StoreCategory> storeCategories) {
         return StoreInquiryByPopularDTO.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
                 .storeImage(store.getImage())
-                .storeCategory(toTags(store.getStoreCategories()).get(0))
+                .storeCategory(toTags(storeCategories).get(0))
                 .build();
     }
 
@@ -127,9 +112,10 @@ public class StoreMapper {
                 .build();
     }
 
-    private List<Category> toTags(List<StoreCategory> storeCategories) {
+    private List<String> toTags(List<StoreCategory> storeCategories) {
         return storeCategories.stream()
                 .map(StoreCategory::getCategory)
+                .map(Category::getToKorean)
                 .collect(Collectors.toList());
     }
 

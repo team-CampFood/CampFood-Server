@@ -14,5 +14,5 @@ public class StoreInquiryByPopularDTO {
     private Long storeId;
     private String storeName;
     private String storeImage;
-    private Category storeCategory;
+    private String storeCategory;
 }

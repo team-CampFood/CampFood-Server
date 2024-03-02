@@ -17,7 +17,7 @@ public class StoreInquiryDetailDTO {
     private Long storeId;
     private String identificationId;
     private String storeName;
-    private List<Category> storeCategories;
+    private List<String> storeCategories;
     private String storeImage;
     private double naverRate;
     private int naverVisitedReviewCnt;

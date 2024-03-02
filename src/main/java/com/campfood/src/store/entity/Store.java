@@ -61,18 +61,6 @@ public class Store extends BaseEntity {
 
     private String storeNumber;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<StoreCategory> storeCategories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<StoreOpenTime> storeOpenTimes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<StoreUniversity> universities = new ArrayList<>();
-
     public void updateStore(StoreUpdateDTO storeUpdateDTO) {
         this.name = storeUpdateDTO.getName();
         this.naverRate = storeUpdateDTO.getRate();
@@ -82,17 +70,5 @@ public class Store extends BaseEntity {
         this.storeNumber = storeUpdateDTO.getStoreNumber();
         this.latitude = storeUpdateDTO.getLatitude();
         this.longitude = storeUpdateDTO.getLongitude();
-    }
-
-    public void updateCategories(List<StoreCategory> categories) {
-        this.storeCategories = categories;
-    }
-
-    public void updateOpenTimes(List<StoreOpenTime> openTimes) {
-        this.storeOpenTimes = openTimes;
-    }
-
-    public void addUniversity(StoreUniversity storeUniversity) {
-        this.universities.add(storeUniversity);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public class StoreInquiryAllDTO {
     private Long storeId;
     private String storeName;
-    private List<Category> storeCategories;
+    private List<String> storeCategories;
     private String storeImage;
     private double naverRate;
     private int naverVisitedReviewCnt;

@@ -43,17 +43,9 @@ public class StoreService implements EntityLoader<Store, Long> {
                 .orElseGet(() -> storeRepository.save(storeMapper.toStore(request)));
 
         store.updateStore(request);
-        store.updateCategories(toStoreCategories(request.getCategories(), store));
-        store.updateOpenTimes(toStoreOpenTimes(request.getOpeningTimes(), store));
 
         // 가게 대학 정보 확인
         University university = getUniversityByName(request.getUniversityName(), store);
-        // 해당 대학이 정보가 없다면 추가
-        if (university == null) {
-            store.addUniversity(storeMapper.toStoreUniversity(
-                    universityService.findUniversityByName(request.getUniversityName()), store)
-            );
-        }
 
         return store.getId();
     }
@@ -80,7 +72,8 @@ public class StoreService implements EntityLoader<Store, Long> {
         Page<Store> stores = storeCategoryRepository.findAllByTag(category, pageable);
 
         return new StorePageResponse<>(
-                stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
+                stores.map(store -> storeMapper.toInquiryByTagDTO(store, storeCategoryRepository.findAllByStore(store)))
+                        .stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
@@ -92,7 +85,8 @@ public class StoreService implements EntityLoader<Store, Long> {
                 .map(StoreUniversity::getStore);
 
         return new StorePageResponse<>(
-                stores.map(storeMapper::toInquiryByTagDTO).stream().collect(Collectors.toList()),
+                stores.map(store -> storeMapper.toInquiryByTagDTO(store, storeCategoryRepository.findAllByStore(store)))
+                        .stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
@@ -100,14 +94,17 @@ public class StoreService implements EntityLoader<Store, Long> {
     public StoreInquiryDetailDTO inquiryStoreDetail(Long storeId) {
         Store store = loadEntity(storeId);
 
-        return storeMapper.toInquiryDetailDTO(store);
+        return storeMapper.toInquiryDetailDTO(store,
+                storeCategoryRepository.findAllByStore(store),
+                storeOpenTimeRepository.findAllByStore(store));
     }
 
     public StorePageResponse<StoreSearchByKeywordDTO> searchStoresByKeyword(final String keyword, Pageable pageable) {
         Page<Store> stores = storeRepository.findByKeyword(keyword, pageable);
 
         return new StorePageResponse<>(
-                stores.map(storeMapper::toSearchByKeywordDTO).stream().collect(Collectors.toList()),
+                stores.map(store -> storeMapper.toSearchByKeywordDTO(store, storeCategoryRepository.findAllByStore(store)))
+                        .stream().collect(Collectors.toList()),
                 stores.hasNext()
         );
     }
@@ -117,7 +114,7 @@ public class StoreService implements EntityLoader<Store, Long> {
         if (universityName == null) {
             List<Store> stores = storeRepository.findTop10ByOrderByCampFoodRateDesc();
             return stores.stream()
-                    .map(storeMapper::toInquiryByPopularDTO)
+                    .map(store -> storeMapper.toInquiryByPopularDTO(store, storeCategoryRepository.findAllByStore(store)))
                     .collect(Collectors.toList());
         }
 
@@ -126,7 +123,7 @@ public class StoreService implements EntityLoader<Store, Long> {
         List<Store> stores = storeUniversityRepository.findTop10ByUniversity(university, PageRequest.of(0, 10));
 
         return stores.stream()
-                .map(storeMapper::toInquiryByPopularDTO)
+                .map(store -> storeMapper.toInquiryByPopularDTO(store, storeCategoryRepository.findAllByStore(store)))
                 .collect(Collectors.toList());
     }
 
@@ -142,31 +139,9 @@ public class StoreService implements EntityLoader<Store, Long> {
         );
     }
 
-    private List<StoreCategory> toStoreCategories(List<Category> categories, Store store) {
-
-        // 기존 카테고리 삭제
-        List<StoreCategory> oldCategories = store.getStoreCategories();
-        storeCategoryRepository.deleteAll(oldCategories);
-
-        return categories.stream()
-                .map(category -> storeMapper.toStoreCategory(category, store))
-                .map(storeCategoryRepository::save)
-                .collect(Collectors.toList());
-    }
-
-    private List<StoreOpenTime> toStoreOpenTimes(List<StoreUpdateDTO.OpeningTime> openingTimes, Store store) {
-        // 기존 오픈 시간 삭제
-        List<StoreOpenTime> oldOpenTimes = store.getStoreOpenTimes();
-        storeOpenTimeRepository.deleteAll(oldOpenTimes);
-
-        return openingTimes.stream()
-                .map(openingTime -> storeMapper.toStoreOpenTime(openingTime, store))
-                .map(storeOpenTimeRepository::save)
-                .collect(Collectors.toList());
-    }
 
     private University getUniversityByName(String universityName, Store store) {
-        return store.getUniversities().stream()
+        return storeUniversityRepository.findAllByStore(store).stream()
                 .map(StoreUniversity::getUniversity)
                 .filter(university -> university.getName().equals(universityName))
                 .findAny()
