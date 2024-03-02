@@ -14,6 +14,10 @@ import java.util.List;
 public interface StoreUniversityRepository extends JpaRepository<StoreUniversity, Long> {
     Page<StoreUniversity>  findAllByUniversity(University university, Pageable pageable);
 
+    boolean existsByUniversityAndStore(University university, Store store);
+
+    List<StoreUniversity> findAllByStore(Store store);
+
     @Query("SELECT su.store FROM StoreUniversity su WHERE :university = su.university ORDER BY su.store.campFoodRate DESC")
     List<Store> findTop10ByUniversity(@Param("university") University university, Pageable pageable);
 }

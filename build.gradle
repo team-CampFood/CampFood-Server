@@ -64,7 +64,9 @@ dependencies {
 	//s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-
+	// apache poi
+	implementation 'org.apache.poi:poi:5.0.0'
+	implementation 'org.apache.poi:poi-ooxml:5.0.0'
 }
 
 tasks.named('test') {

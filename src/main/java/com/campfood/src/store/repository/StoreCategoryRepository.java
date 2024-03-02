@@ -10,8 +10,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface StoreCategoryRepository extends JpaRepository<StoreCategory, Long> {
+
+    Optional<StoreCategory> findByStoreAndCategory(Store store, Category category);
+    List<StoreCategory> findAllByStore(Store store);
 
     @Query("SELECT sc.store FROM StoreCategory sc WHERE sc.category = :category")
     Page<Store> findAllByTag(@Param("category") Category category, Pageable pageable);;

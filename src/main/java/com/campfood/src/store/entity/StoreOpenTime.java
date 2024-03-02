@@ -30,4 +30,8 @@ public class StoreOpenTime extends BaseEntity {
 
     private String content;
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
 }
