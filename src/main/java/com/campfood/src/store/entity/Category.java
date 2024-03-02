@@ -27,6 +27,9 @@ public enum Category {
     TRIPE("곱창/막창/대창"),
     SEAFOOD("해산물"),
     CHICKENS("닭갈비/찜닭/닭발"),
+    READY_MADE("간편식/컵밥/도시락"),
+    SALAD("샐러드"),
+    BAKERY("베이커리/케이크"),
     ;
 
     private final String toKorean;
