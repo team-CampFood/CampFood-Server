@@ -1,11 +1,13 @@
-version: "3" # 버전 지정
+version: "3"
 
-services: # 컨테이너 설정
+services:
   backend:
     container_name: campfood-dev
     image: kimjunseok/campfood-dev
     ports:
       - 8080:8080
+    volumes:
+      - /home/ubuntu/stores:/app/stores
 
   redis:
     container_name: redis-dev
