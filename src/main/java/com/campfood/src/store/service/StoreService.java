@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,31 @@ public class StoreService implements EntityLoader<Store, Long> {
 
     private final StoreMapper storeMapper;
     private final AuthUtils authUtils;
+    private KDNode root;
+
+    @PostConstruct
+    public void initializeKDTree() {
+        List<Store> stores = storeRepository.findAll();
+        root = buildKDTree(stores, 0);
+    }
+
+    private KDNode buildKDTree(List<Store> stores, int depth) {
+        if (stores.isEmpty()) {
+            return null;
+        }
+
+        int axis = depth % 2;
+        stores.sort((a, b) -> axis == 0 ?
+                Double.compare(Double.parseDouble(a.getLatitude()), Double.parseDouble(b.getLatitude())) :
+                Double.compare(Double.parseDouble(a.getLongitude()), Double.parseDouble(b.getLongitude())));
+
+        int medianIndex = stores.size() / 2;
+        KDNode node = new KDNode(stores.get(medianIndex));
+        node.left = buildKDTree(stores.subList(0, medianIndex), depth + 1);
+        node.right = buildKDTree(stores.subList(medianIndex + 1, stores.size()), depth + 1);
+
+        return node;
+    }
 
     @Transactional
     public Long updateStore(StoreUpdateDTO request) {
@@ -153,4 +179,77 @@ public class StoreService implements EntityLoader<Store, Long> {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.STORE_NOT_EXIST));
     }
+
+    @Override
+    public StoreNearestDTO inquiryNearestStores(Double latitude, Double longitude) {
+        if (root == null) {
+            return null;
+        }
+
+        Store nearestStore = findNearest(root, latitude, longitude, 0);
+
+        if (nearestStore == null) {
+            return null;
+        }
+
+        return StoreNearestDTO.builder()
+                .id(nearestStore.getId())
+                .name(nearestStore.getName())
+                .latitude(Double.parseDouble(nearestStore.getLatitude()))
+                .longitude(Double.parseDouble(nearestStore.getLongitude()))
+                .build();
+    }
+
+    private Store findNearest(KDNode node, double lat, double lon, int depth) {
+        if (node == null) {
+            return null;
+        }
+
+        int axis = depth % 2;
+        double nodeValue = (axis == 0) ? Double.parseDouble(node.store.getLatitude()) : Double.parseDouble(node.store.getLongitude());
+        double targetValue = (axis == 0) ? lat : lon;
+
+        KDNode nextBranch = (targetValue < nodeValue) ? node.left : node.right;
+        KDNode otherBranch = (targetValue < nodeValue) ? node.right : node.left;
+
+        Store nextBest = findNearest(nextBranch, lat, lon, depth + 1);
+        Store best = cmp(node.store, nextBest, lat, lon) <= 0 ? node.store : nextBest;
+
+        if (otherBranch != null) {
+            if (Math.abs(targetValue - nodeValue) < distance(lat, lon, Double.parseDouble(best.getLatitude()), Double.parseDouble(best.getLongitude()))) {
+                Store otherBest = findNearest(otherBranch, lat, lon, depth + 1);
+                best = cmp(best, otherBest, lat, lon) <= 0 ? best : otherBest;
+            }
+        }
+
+        return best;
+    }
+
+    private int cmp(Store s1, Store s2, double lat, double lon) {
+        if (s1 == null && s2 == null) return 0;
+        if (s1 == null) return 1;
+        if (s2 == null) return -1;
+
+        double d1 = distance(lat, lon, Double.parseDouble(s1.getLatitude()), Double.parseDouble(s1.getLongitude()));
+        double d2 = distance(lat, lon, Double.parseDouble(s2.getLatitude()), Double.parseDouble(s2.getLongitude()));
+        return Double.compare(d1, d2);
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double dx = lat1 - lat2;
+        double dy = lon1 - lon2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+
+    public class KDNode {
+        Store store;
+        KDNode left, right;
+
+        public KDNode(Store store) {
+            this.store = store;
+            this.left = this.right = null;
+        }
+    }
+
 }
