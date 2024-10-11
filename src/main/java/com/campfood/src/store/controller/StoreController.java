@@ -107,4 +107,17 @@ public class StoreController {
         StorePageResponse<StoreInquiryByHeartDTO> responseDTO = storeService.inquiryStoresByHeart(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_STORES_BY_HEART, responseDTO));
     }
+
+    @Operation(summary = "근처 가게 조회")
+    @GetMapping("/nearest")
+    public ResponseEntity<ResultResponse> inquiryNearestStore(
+            @Parameter(description = "현재 위치의 위도", required = true)
+            @RequestParam Double latitude,
+            @Parameter(description = "현재 위치의 경도", required = true)
+            @RequestParam Double longitude) {
+
+        StoreNearestDTO nearestStores = storeService.inquiryNearestStores(latitude, longitude);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.INQUIRY_NEAREST_STORES, nearestStores));
+    }
+
 }
