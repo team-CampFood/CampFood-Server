@@ -200,38 +200,38 @@ public class StoreService implements EntityLoader<Store, Long> {
                 .build();
     }
 
-    private Store findNearest(KDNode node, double lat, double lon, int depth) {
+    private Store findNearest(KDNode node, double latitude, double longitude, int depth) {
         if (node == null) {
             return null;
         }
 
         int axis = depth % 2;
         double nodeValue = (axis == 0) ? Double.parseDouble(node.store.getLatitude()) : Double.parseDouble(node.store.getLongitude());
-        double targetValue = (axis == 0) ? lat : lon;
+        double targetValue = (axis == 0) ? latitude : longitude;
 
         KDNode nextBranch = (targetValue < nodeValue) ? node.left : node.right;
         KDNode otherBranch = (targetValue < nodeValue) ? node.right : node.left;
 
-        Store nextBest = findNearest(nextBranch, lat, lon, depth + 1);
-        Store best = cmp(node.store, nextBest, lat, lon) <= 0 ? node.store : nextBest;
+        Store candidate = findNearest(nextBranch, latitude, longitude, depth + 1);
+        Store best = cmp(node.store, candidate, latitude, longitude) <= 0 ? node.store : candidate;
 
         if (otherBranch != null) {
-            if (Math.abs(targetValue - nodeValue) < distance(lat, lon, Double.parseDouble(best.getLatitude()), Double.parseDouble(best.getLongitude()))) {
-                Store otherBest = findNearest(otherBranch, lat, lon, depth + 1);
-                best = cmp(best, otherBest, lat, lon) <= 0 ? best : otherBest;
+            if (Math.abs(targetValue - nodeValue) < distance(latitude, longitude, Double.parseDouble(best.getLatitude()), Double.parseDouble(best.getLongitude()))) {
+                Store otherBest = findNearest(otherBranch, latitude, longitude, depth + 1);
+                best = cmp(best, otherBest, latitude, longitude) <= 0 ? best : otherBest;
             }
         }
 
         return best;
     }
 
-    private int cmp(Store s1, Store s2, double lat, double lon) {
+    private int cmp(Store s1, Store s2, double latitude, double longitude) {
         if (s1 == null && s2 == null) return 0;
         if (s1 == null) return 1;
         if (s2 == null) return -1;
 
-        double d1 = distance(lat, lon, Double.parseDouble(s1.getLatitude()), Double.parseDouble(s1.getLongitude()));
-        double d2 = distance(lat, lon, Double.parseDouble(s2.getLatitude()), Double.parseDouble(s2.getLongitude()));
+        double d1 = distance(latitude, longitude, Double.parseDouble(s1.getLatitude()), Double.parseDouble(s1.getLongitude()));
+        double d2 = distance(latitude, longitude, Double.parseDouble(s2.getLatitude()), Double.parseDouble(s2.getLongitude()));
         return Double.compare(d1, d2);
     }
 
